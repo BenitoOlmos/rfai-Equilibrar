@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- ----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `client_profiles` (
   `user_id` VARCHAR(50) NOT NULL,
+  `program` ENUM('CULPA', 'ANGUSTIA') NOT NULL DEFAULT 'CULPA',
   `current_week` INT DEFAULT 1 CHECK (`current_week` BETWEEN 1 AND 4),
   `start_date` DATE NOT NULL,
   `next_session` DATETIME DEFAULT NULL,
@@ -61,10 +62,16 @@ CREATE TABLE IF NOT EXISTS `clinical_test_results` (
   `client_id` VARCHAR(50) NOT NULL,
   `date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `week_number` INT NOT NULL,
-  `score_autojuicio` INT NOT NULL COMMENT 'Escala 6-30',
-  `score_culpa_no_adaptativa` INT NOT NULL COMMENT 'Escala 5-25',
-  `score_responsabilidad_consciente` INT NOT NULL COMMENT 'Escala 7-35',
-  `score_humanizacion_error` INT NOT NULL COMMENT 'Escala 2-10',
+  -- Dimensiones RFAI Culpa
+  `score_autojuicio` INT DEFAULT NULL COMMENT 'Escala 6-30',
+  `score_culpa_no_adaptativa` INT DEFAULT NULL COMMENT 'Escala 5-25',
+  `score_responsabilidad_consciente` INT DEFAULT NULL COMMENT 'Escala 7-35',
+  `score_humanizacion_error` INT DEFAULT NULL COMMENT 'Escala 2-10',
+  -- Dimensiones RFAI Angustia
+  `score_angustia_anticipatoria` INT DEFAULT NULL COMMENT 'Rango 4-20',
+  `score_autoculpabilizacion_angustia` INT DEFAULT NULL COMMENT 'Rango 5-25',
+  `score_desconexion_amor_propio` INT DEFAULT NULL COMMENT 'Rango 3-15',
+  `score_regulacion_amor` INT DEFAULT NULL COMMENT 'Rango 5-25',
   PRIMARY KEY (`id`),
   KEY `idx_client_date` (`client_id`, `date`),
   CONSTRAINT `fk_test_client` FOREIGN KEY (`client_id`) REFERENCES `client_profiles` (`user_id`) ON DELETE CASCADE

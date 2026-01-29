@@ -6,8 +6,8 @@ import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Responsi
 import { BrandLogo } from './BrandLogo';
 
 interface Props {
-  currentUser: User;
-  onLogout: () => void;
+    currentUser: User;
+    onLogout: () => void;
 }
 
 // ==========================================
@@ -19,12 +19,12 @@ const getMeetingDate = (startDateStr: string, weekNum: number) => {
     date.setDate(date.getDate() + (weekNum - 1) * 7);
     date.setDate(date.getDate() + 2);
     date.setHours(10, 0, 0, 0);
-    
+
     const now = new Date();
     const isPast = date < now;
     const dateStr = date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
     const formatted = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
-    
+
     return { formatted, isPast, fullDate: date };
 };
 
@@ -53,7 +53,7 @@ interface ContentItem {
 const ContentManager: React.FC = () => {
     const [activeType, setActiveType] = useState<'AUDIO' | 'GUIDE' | 'TEST' | 'DOC'>('AUDIO');
     const [showUploadModal, setShowUploadModal] = useState(false);
-    
+
     // Mock Data State
     const [resources, setResources] = useState<ContentItem[]>([
         { id: 1, type: 'AUDIO', title: 'S1: Desactivar la Alerta', prog: 'CULPA', details: '15:00 min' },
@@ -67,7 +67,7 @@ const ContentManager: React.FC = () => {
     const filteredResources = resources.filter(r => r.type === activeType);
 
     const handleDelete = (id: number) => {
-        if(confirm('¿Estás seguro de eliminar este recurso?')) {
+        if (confirm('¿Estás seguro de eliminar este recurso?')) {
             setResources(prev => prev.filter(r => r.id !== id));
         }
     };
@@ -80,8 +80,8 @@ const ContentManager: React.FC = () => {
                     <h2 className="font-bold text-lg text-slate-800 leading-tight">Biblioteca RFAI</h2>
                     <p className="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Gestión de Contenidos</p>
                 </div>
-                <button 
-                    onClick={() => setShowUploadModal(true)} 
+                <button
+                    onClick={() => setShowUploadModal(true)}
                     className="bg-slate-900 text-white p-2 md:px-4 md:py-2 rounded-xl text-xs font-bold flex items-center gap-2 hover:bg-slate-800 transition-all shadow-lg shadow-slate-200 active:scale-95"
                 >
                     <Plus size={20} /> <span className="hidden md:inline">Crear Nuevo</span>
@@ -97,14 +97,14 @@ const ContentManager: React.FC = () => {
                         { id: 'TEST', label: 'Tests', icon: CheckSquare, color: 'teal' },
                         { id: 'DOC', label: 'Docs', icon: File, color: 'blue' },
                     ].map((item) => (
-                        <button 
+                        <button
                             key={item.id}
-                            onClick={() => setActiveType(item.id as any)} 
-                            className={`snap-start shrink-0 px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 border ${activeType === item.id 
-                                ? `bg-${item.color}-50 text-${item.color}-700 border-${item.color}-200 ring-1 ring-${item.color}-200` 
+                            onClick={() => setActiveType(item.id as any)}
+                            className={`snap-start shrink-0 px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 border ${activeType === item.id
+                                ? `bg-${item.color}-50 text-${item.color}-700 border-${item.color}-200 ring-1 ring-${item.color}-200`
                                 : 'bg-white text-slate-500 border-slate-100 hover:bg-slate-50'}`}
                         >
-                            <item.icon size={16}/> {item.label}
+                            <item.icon size={16} /> {item.label}
                         </button>
                     ))}
                 </div>
@@ -114,7 +114,7 @@ const ContentManager: React.FC = () => {
             <div className="flex-1 overflow-y-auto p-4 space-y-3 pb-24">
                 {filteredResources.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-20 text-slate-400">
-                        <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-4 animate-pulse"><Upload size={32} className="opacity-50"/></div>
+                        <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-4 animate-pulse"><Upload size={32} className="opacity-50" /></div>
                         <p className="text-sm font-medium">No hay contenidos aquí</p>
                         <p className="text-xs">Sube un nuevo archivo para comenzar</p>
                     </div>
@@ -148,17 +148,17 @@ const ContentManager: React.FC = () => {
                     <div className="bg-white w-full max-w-lg rounded-t-[2rem] md:rounded-[2rem] shadow-2xl animate-in slide-in-from-bottom duration-300 flex flex-col max-h-[90vh]">
                         <div className="p-6 border-b border-slate-100 flex justify-between items-center">
                             <h3 className="font-bold text-xl text-slate-800">Crear Recurso</h3>
-                            <button onClick={() => setShowUploadModal(false)} className="p-2 bg-slate-50 hover:bg-slate-100 rounded-full text-slate-500 transition-colors"><X size={20}/></button>
+                            <button onClick={() => setShowUploadModal(false)} className="p-2 bg-slate-50 hover:bg-slate-100 rounded-full text-slate-500 transition-colors"><X size={20} /></button>
                         </div>
-                        
+
                         <div className="p-6 space-y-6 overflow-y-auto">
                             <div>
                                 <label className="block text-xs font-bold text-slate-500 uppercase mb-3">Tipo de Recurso</label>
                                 <div className="grid grid-cols-2 gap-3">
-                                    <button onClick={() => setActiveType('AUDIO')} className={`p-3 rounded-xl border text-sm font-bold flex items-center justify-center gap-2 transition-all ${activeType === 'AUDIO' ? 'border-indigo-500 bg-indigo-50 text-indigo-700 ring-1 ring-indigo-500' : 'border-slate-200 text-slate-500'}`}><Headphones size={18}/> Audio</button>
-                                    <button onClick={() => setActiveType('DOC')} className={`p-3 rounded-xl border text-sm font-bold flex items-center justify-center gap-2 transition-all ${activeType === 'DOC' ? 'border-blue-500 bg-blue-50 text-blue-700 ring-1 ring-blue-500' : 'border-slate-200 text-slate-500'}`}><File size={18}/> Doc</button>
-                                    <button onClick={() => setActiveType('GUIDE')} className={`p-3 rounded-xl border text-sm font-bold flex items-center justify-center gap-2 transition-all ${activeType === 'GUIDE' ? 'border-amber-500 bg-amber-50 text-amber-700 ring-1 ring-amber-500' : 'border-slate-200 text-slate-500'}`}><FileText size={18}/> Guía</button>
-                                    <button onClick={() => setActiveType('TEST')} className={`p-3 rounded-xl border text-sm font-bold flex items-center justify-center gap-2 transition-all ${activeType === 'TEST' ? 'border-teal-500 bg-teal-50 text-teal-700 ring-1 ring-teal-500' : 'border-slate-200 text-slate-500'}`}><CheckSquare size={18}/> Test</button>
+                                    <button onClick={() => setActiveType('AUDIO')} className={`p-3 rounded-xl border text-sm font-bold flex items-center justify-center gap-2 transition-all ${activeType === 'AUDIO' ? 'border-indigo-500 bg-indigo-50 text-indigo-700 ring-1 ring-indigo-500' : 'border-slate-200 text-slate-500'}`}><Headphones size={18} /> Audio</button>
+                                    <button onClick={() => setActiveType('DOC')} className={`p-3 rounded-xl border text-sm font-bold flex items-center justify-center gap-2 transition-all ${activeType === 'DOC' ? 'border-blue-500 bg-blue-50 text-blue-700 ring-1 ring-blue-500' : 'border-slate-200 text-slate-500'}`}><File size={18} /> Doc</button>
+                                    <button onClick={() => setActiveType('GUIDE')} className={`p-3 rounded-xl border text-sm font-bold flex items-center justify-center gap-2 transition-all ${activeType === 'GUIDE' ? 'border-amber-500 bg-amber-50 text-amber-700 ring-1 ring-amber-500' : 'border-slate-200 text-slate-500'}`}><FileText size={18} /> Guía</button>
+                                    <button onClick={() => setActiveType('TEST')} className={`p-3 rounded-xl border text-sm font-bold flex items-center justify-center gap-2 transition-all ${activeType === 'TEST' ? 'border-teal-500 bg-teal-50 text-teal-700 ring-1 ring-teal-500' : 'border-slate-200 text-slate-500'}`}><CheckSquare size={18} /> Test</button>
                                 </div>
                             </div>
 
@@ -176,7 +176,7 @@ const ContentManager: React.FC = () => {
                                             <option value="CULPA">RFAI Culpa</option>
                                             <option value="ANGUSTIA">RFAI Angustia</option>
                                         </select>
-                                        <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"/>
+                                        <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                                     </div>
                                 </div>
                             </div>
@@ -236,12 +236,12 @@ const ProCalendarModule: React.FC<{ onSelectClient: (c: ClientProfile) => void }
         const apps = (day === 0 || day === 6) ? [] : [
             { id: 'apt-1', time: '09:00', duration: 60, type: 'Evaluación Inicial', client: ALL_USERS[3] as ClientProfile, status: 'completed' },
             { id: 'apt-2', time: '11:30', duration: 45, type: 'Sesión de Seguimiento', client: ALL_USERS[4] as ClientProfile, status: 'pending' },
-            { id: 'apt-3', time: '15:00', duration: 60, type: 'Revisión de Guía', client: ALL_USERS[7] as ClientProfile, status: 'pending' }, 
+            { id: 'apt-3', time: '15:00', duration: 60, type: 'Revisión de Guía', client: ALL_USERS[7] as ClientProfile, status: 'pending' },
         ];
         setAppointments(day % 2 === 0 ? apps : [apps[1], apps[0]]);
     }, [selectedDate]);
 
-    const weekDays = Array.from({length: 14}, (_, i) => {
+    const weekDays = Array.from({ length: 14 }, (_, i) => {
         const d = new Date(); d.setDate(new Date().getDate() + i); return d;
     });
 
@@ -296,7 +296,7 @@ const ProCalendarModule: React.FC<{ onSelectClient: (c: ClientProfile) => void }
                                         <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${apt.status === 'completed' ? 'bg-slate-300' : isAngustia ? 'bg-indigo-500' : 'bg-brand-500'}`}></div>
                                         <div className="flex justify-between items-start mb-3">
                                             <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${apt.status === 'completed' ? 'bg-slate-100 text-slate-500' : isAngustia ? 'bg-indigo-50 text-indigo-700' : 'bg-brand-50 text-brand-700'}`}>{apt.type}</span>
-                                            <MoreVertical size={16} className="text-slate-300"/>
+                                            <MoreVertical size={16} className="text-slate-300" />
                                         </div>
                                         <div className="flex items-center gap-4 mb-4 cursor-pointer" onClick={() => onSelectClient(apt.client)}>
                                             <img src={apt.client.avatar} className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm" alt="" />
@@ -326,49 +326,49 @@ const ProCalendarModule: React.FC<{ onSelectClient: (c: ClientProfile) => void }
 
 const ProClientsList: React.FC<{ onSelect: (c: ClientProfile) => void, selectedId?: string, className?: string }> = ({ onSelect, selectedId, className }) => {
     const clients = ALL_USERS.filter(u => u.role === 'CLIENT') as ClientProfile[];
-  
+
     return (
         <div className={`bg-white h-full flex flex-col ${className}`}>
             <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50 sticky top-0 z-10 backdrop-blur-md">
                 <h3 className="font-bold text-lg text-slate-800 tracking-tight">Pacientes</h3>
                 <button className="text-brand-600 bg-brand-50 hover:bg-brand-100 p-2 rounded-full transition-colors"><UserPlus size={18} /></button>
             </div>
-            
+
             <div className="p-4 border-b border-slate-100 bg-white sticky top-[80px] z-10">
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                     <input type="text" placeholder="Buscar..." className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-500 transition-all" />
                 </div>
             </div>
-      
+
             <div className="flex-1 overflow-y-auto p-4 space-y-3 pb-24 md:pb-4">
                 {clients.map(client => {
-                     const progressPercent = (client.currentWeek / 4) * 100;
-                     const isAngustia = client.program === 'ANGUSTIA';
-                     const tags = isAngustia ? 'RFAI - Angustia' : 'RFAI - Culpa';
-                     const badgeColor = isAngustia ? 'text-indigo-600 bg-indigo-50' : 'text-brand-600 bg-brand-50';
-                     const barColor = isAngustia ? 'bg-indigo-500' : 'bg-brand-500';
-                     const borderColor = selectedId === client.id ? (isAngustia ? 'border-indigo-500 bg-indigo-50/50' : 'border-brand-500 bg-brand-50/50') : 'border-slate-100 hover:border-slate-300';
+                    const progressPercent = (client.currentWeek / 4) * 100;
+                    const isAngustia = client.program === 'ANGUSTIA';
+                    const tags = isAngustia ? 'RFAI - Angustia' : 'RFAI - Culpa';
+                    const badgeColor = isAngustia ? 'text-indigo-600 bg-indigo-50' : 'text-brand-600 bg-brand-50';
+                    const barColor = isAngustia ? 'bg-indigo-500' : 'bg-brand-500';
+                    const borderColor = selectedId === client.id ? (isAngustia ? 'border-indigo-500 bg-indigo-50/50' : 'border-brand-500 bg-brand-50/50') : 'border-slate-100 hover:border-slate-300';
 
-                     return (
-                      <div key={client.id} onClick={() => onSelect(client)} className={`p-4 rounded-2xl border cursor-pointer transition-all duration-200 relative overflow-hidden group hover:shadow-md ${borderColor}`}>
-                        <div className="flex items-center gap-4 mb-3">
-                            <div className="relative">
-                                <img src={client.avatar} alt={client.name} className="w-12 h-12 rounded-full bg-slate-200 object-cover border-2 border-white shadow-sm" />
-                                <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ${client.status === 'ACTIVE' ? 'bg-green-500' : 'bg-slate-400'}`}></div>
+                    return (
+                        <div key={client.id} onClick={() => onSelect(client)} className={`p-4 rounded-2xl border cursor-pointer transition-all duration-200 relative overflow-hidden group hover:shadow-md ${borderColor}`}>
+                            <div className="flex items-center gap-4 mb-3">
+                                <div className="relative">
+                                    <img src={client.avatar} alt={client.name} className="w-12 h-12 rounded-full bg-slate-200 object-cover border-2 border-white shadow-sm" />
+                                    <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ${client.status === 'ACTIVE' ? 'bg-green-500' : 'bg-slate-400'}`}></div>
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <h4 className={`font-bold text-sm truncate ${selectedId === client.id ? 'text-slate-900' : 'text-slate-800'}`}>{client.name}</h4>
+                                    <p className="text-xs text-slate-500 font-medium">{tags}</p>
+                                </div>
+                                <div className="text-right">
+                                    <span className={`text-xs font-bold px-2 py-1 rounded-lg ${badgeColor}`}>Sem {client.currentWeek}</span>
+                                </div>
                             </div>
-                            <div className="flex-1 min-w-0">
-                                <h4 className={`font-bold text-sm truncate ${selectedId === client.id ? 'text-slate-900' : 'text-slate-800'}`}>{client.name}</h4>
-                                <p className="text-xs text-slate-500 font-medium">{tags}</p>
-                            </div>
-                            <div className="text-right">
-                                 <span className={`text-xs font-bold px-2 py-1 rounded-lg ${badgeColor}`}>Sem {client.currentWeek}</span>
+                            <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden flex">
+                                <div className={`${barColor} h-full rounded-full`} style={{ width: `${progressPercent}%` }}></div>
                             </div>
                         </div>
-                        <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden flex">
-                            <div className={`${barColor} h-full rounded-full`} style={{ width: `${progressPercent}%` }}></div>
-                        </div>
-                      </div>
                     );
                 })}
             </div>
@@ -408,8 +408,8 @@ const ProClientDetail: React.FC<{ client: ClientProfile; onBack?: () => void }> 
                             <Mail size={14} /> {client.email}
                         </div>
                         <div className="flex gap-2 mt-2">
-                             <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide ${themeBg} ${themeColor}`}>{client.program}</span>
-                             <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-wide">Semana {client.currentWeek}</span>
+                            <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide ${themeBg} ${themeColor}`}>{client.program}</span>
+                            <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-wide">Semana {client.currentWeek}</span>
                         </div>
                     </div>
                 </div>
@@ -428,14 +428,14 @@ const ProClientDetail: React.FC<{ client: ClientProfile; onBack?: () => void }> 
 
             {/* Content */}
             <div className="flex-1 overflow-y-auto p-6 space-y-8">
-                
+
                 {/* Stats Cards */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
                         <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">Adherencia</p>
                         <p className={`text-2xl font-bold ${themeColor}`}>85%</p>
                         <div className="w-full bg-slate-200 h-1.5 rounded-full mt-2 overflow-hidden">
-                            <div className={`h-full ${isAngustia ? 'bg-indigo-500' : 'bg-brand-500'}`} style={{width: '85%'}}></div>
+                            <div className={`h-full ${isAngustia ? 'bg-indigo-500' : 'bg-brand-500'}`} style={{ width: '85%' }}></div>
                         </div>
                     </div>
                     <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
@@ -444,16 +444,16 @@ const ProClientDetail: React.FC<{ client: ClientProfile; onBack?: () => void }> 
                         <p className="text-[10px] text-slate-400">Video conferencia</p>
                     </div>
                     <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                         <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">Audios</p>
-                         <div className="flex items-end gap-2">
+                        <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">Audios</p>
+                        <div className="flex items-end gap-2">
                             <p className="text-2xl font-bold text-slate-700">12</p>
-                            <span className="text-xs text-green-500 font-bold mb-1 flex items-center"><TrendingUp size={12}/> +2</span>
-                         </div>
-                         <p className="text-[10px] text-slate-400">Esta semana</p>
+                            <span className="text-xs text-green-500 font-bold mb-1 flex items-center"><TrendingUp size={12} /> +2</span>
+                        </div>
+                        <p className="text-[10px] text-slate-400">Esta semana</p>
                     </div>
-                     <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                         <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">Estado</p>
-                         <p className="text-sm font-bold text-green-600 bg-green-50 px-2 py-1 rounded inline-block mt-1">Estable</p>
+                    <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                        <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">Estado</p>
+                        <p className="text-sm font-bold text-green-600 bg-green-50 px-2 py-1 rounded inline-block mt-1">Estable</p>
                     </div>
                 </div>
 
@@ -466,35 +466,35 @@ const ProClientDetail: React.FC<{ client: ClientProfile; onBack?: () => void }> 
                                 <h3 className="font-bold text-slate-800">Evolución Clínica</h3>
                                 <p className="text-xs text-slate-400">Puntajes RFAI semanales</p>
                             </div>
-                            <button className="text-slate-400 hover:text-slate-600"><MoreVertical size={18}/></button>
+                            <button className="text-slate-400 hover:text-slate-600"><MoreVertical size={18} /></button>
                         </div>
                         <div className="h-64 w-full">
                             {scoresData.length > 0 ? (
                                 <ResponsiveContainer width="100%" height="100%">
                                     <LineChart data={scoresData}>
                                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                                        <XAxis dataKey="week" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} dy={10} />
-                                        <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} />
-                                        <Tooltip 
-                                            contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}}
-                                            itemStyle={{fontSize: '12px', fontWeight: 'bold'}}
+                                        <XAxis dataKey="week" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 12 }} dy={10} />
+                                        <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 12 }} />
+                                        <Tooltip
+                                            contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                                            itemStyle={{ fontSize: '12px', fontWeight: 'bold' }}
                                         />
                                         {Object.keys(scoresData[0]).filter(k => k !== 'week').map((key, i) => (
-                                            <Line 
-                                                key={key} 
-                                                type="monotone" 
-                                                dataKey={key} 
-                                                stroke={['#0d9488', '#f59e0b', '#6366f1', '#ec4899'][i % 4]} 
-                                                strokeWidth={3} 
-                                                dot={{fill: 'white', strokeWidth: 2, r: 4}} 
-                                                activeDot={{r: 6}}
+                                            <Line
+                                                key={key}
+                                                type="monotone"
+                                                dataKey={key}
+                                                stroke={['#0d9488', '#f59e0b', '#6366f1', '#ec4899'][i % 4]}
+                                                strokeWidth={3}
+                                                dot={{ fill: 'white', strokeWidth: 2, r: 4 }}
+                                                activeDot={{ r: 6 }}
                                             />
                                         ))}
                                     </LineChart>
                                 </ResponsiveContainer>
                             ) : (
                                 <div className="h-full flex flex-col items-center justify-center text-slate-300 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
-                                    <Activity size={32} className="mb-2 opacity-50"/>
+                                    <Activity size={32} className="mb-2 opacity-50" />
                                     <span className="text-sm font-medium">Sin datos suficientes</span>
                                 </div>
                             )}
@@ -503,18 +503,18 @@ const ProClientDetail: React.FC<{ client: ClientProfile; onBack?: () => void }> 
 
                     {/* Audio Usage */}
                     <div className="p-6 rounded-3xl border border-slate-100 shadow-sm">
-                         <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center justify-between mb-6">
                             <div>
                                 <h3 className="font-bold text-slate-800">Uso de Herramientas</h3>
                                 <p className="text-xs text-slate-400">Minutos de escucha por día</p>
                             </div>
                         </div>
                         <div className="h-64 w-full">
-                             <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height="100%">
                                 <BarChart data={getDailyAudioData()}>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                                    <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} dy={10} />
-                                    <Tooltip cursor={{fill: 'transparent'}} contentStyle={{borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)'}} />
+                                    <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 12 }} dy={10} />
+                                    <Tooltip cursor={{ fill: 'transparent' }} contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }} />
                                     <Bar dataKey="mins" radius={[4, 4, 0, 0]}>
                                         {getDailyAudioData().map((entry, index) => (
                                             <Cell key={`cell-${index}`} fill={entry.mins > 40 ? chartColor : '#cbd5e1'} />
@@ -536,7 +536,7 @@ const ProClientDetail: React.FC<{ client: ClientProfile; onBack?: () => void }> 
                             return (
                                 <div key={week} className="flex items-center gap-4 bg-white p-4 rounded-xl border border-slate-100">
                                     <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${status.isCompleted ? 'bg-green-100 text-green-600' : status.isLocked ? 'bg-slate-100 text-slate-400' : `${themeBg} ${themeColor}`}`}>
-                                        {status.isCompleted ? <CheckCircle2 size={16}/> : status.isLocked ? <Lock size={14}/> : week}
+                                        {status.isCompleted ? <CheckCircle2 size={16} /> : status.isLocked ? <Lock size={14} /> : week}
                                     </div>
                                     <div className="flex-1">
                                         <div className="flex justify-between mb-1">
@@ -545,7 +545,7 @@ const ProClientDetail: React.FC<{ client: ClientProfile; onBack?: () => void }> 
                                             {!status.isCompleted && !status.isLocked && <span className={`text-[10px] font-bold ${themeColor} ${themeBg} px-2 py-0.5 rounded`}>En curso</span>}
                                         </div>
                                         <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                                            <div className={`h-full ${status.isCompleted ? 'bg-green-500' : !status.isLocked ? (isAngustia ? 'bg-indigo-500' : 'bg-brand-500') : 'bg-transparent'}`} style={{width: status.isCompleted ? '100%' : !status.isLocked ? '30%' : '0%'}}></div>
+                                            <div className={`h-full ${status.isCompleted ? 'bg-green-500' : !status.isLocked ? (isAngustia ? 'bg-indigo-500' : 'bg-brand-500') : 'bg-transparent'}`} style={{ width: status.isCompleted ? '100%' : !status.isLocked ? '30%' : '0%' }}></div>
                                         </div>
                                     </div>
                                 </div>
@@ -608,7 +608,7 @@ const AdminGlobalPanel: React.FC = () => {
                         <Server className="text-brand-400" size={24} />
                         <h3 className="font-bold tracking-wide text-brand-400">SERVIDORES</h3>
                     </div>
-                    
+
                     <div className="space-y-4 relative z-10">
                         <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                             <span className="text-slate-300 text-sm">MySQLDB (GCP)</span>
@@ -674,7 +674,7 @@ const AdminSettings: React.FC = () => {
         <div className="h-full bg-slate-50 flex flex-col">
             <div className="bg-white px-4 py-4 flex items-center justify-between border-b border-slate-100 sticky top-0 z-10">
                 <div className="flex items-center gap-2">
-                    <button className="p-2 -ml-2 hover:bg-slate-50 rounded-full text-slate-600"><ArrowLeft size={20}/></button>
+                    <button className="p-2 -ml-2 hover:bg-slate-50 rounded-full text-slate-600"><ArrowLeft size={20} /></button>
                     <h3 className="font-bold text-slate-800">Configuración RFAI</h3>
                 </div>
                 <button className="text-brand-500 font-bold text-sm">Guardar</button>
@@ -682,7 +682,7 @@ const AdminSettings: React.FC = () => {
 
             <div className="p-4 space-y-6 overflow-y-auto pb-24">
                 {/* Integrations */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm relative overflow-hidden">
                         <div className="flex justify-between items-start mb-2">
                             <span className="text-[10px] font-bold text-brand-500 flex items-center gap-1"><span className="w-1.5 h-1.5 bg-brand-500 rounded-full"></span> ONLINE</span>
@@ -709,7 +709,7 @@ const AdminUserManagement: React.FC<{ onSelectUser: (u: User) => void, currentUs
     const [filter, setFilter] = useState<'ALL' | 'ADMIN' | 'PROF' | 'COORD' | 'CLIENT'>('ALL');
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [mockUsers, setMockUsers] = useState(ALL_USERS);
-    
+
     // Filter users logic
     const filteredUsers = mockUsers.filter(u => {
         if (filter === 'ALL') return true;
@@ -725,7 +725,7 @@ const AdminUserManagement: React.FC<{ onSelectUser: (u: User) => void, currentUs
     };
 
     const deleteUser = (id: string) => {
-        if(confirm('¿Eliminar usuario?')) {
+        if (confirm('¿Eliminar usuario?')) {
             setMockUsers(prev => prev.filter(u => u.id !== id));
         }
     }
@@ -749,7 +749,7 @@ const AdminUserManagement: React.FC<{ onSelectUser: (u: User) => void, currentUs
                     {['Todos', 'Admin', 'Profesional', 'Coordinador', 'Pacientes'].map((label, idx) => {
                         const key = ['ALL', 'ADMIN', 'PROF', 'COORD', 'CLIENT'][idx] as any;
                         return (
-                            <button 
+                            <button
                                 key={key}
                                 onClick={() => setFilter(key)}
                                 className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-colors ${filter === key ? 'bg-slate-900 text-white' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'}`}
@@ -784,7 +784,7 @@ const AdminUserManagement: React.FC<{ onSelectUser: (u: User) => void, currentUs
                                     </div>
                                 </div>
                                 <div className="flex gap-1">
-                                    <button 
+                                    <button
                                         onClick={() => toggleStatus(user.id)}
                                         className={`p-2 rounded-full border transition-all ${user.status === 'ACTIVE' ? 'text-green-600 bg-green-50 border-green-200 hover:bg-red-50 hover:text-red-500 hover:border-red-200' : 'text-slate-400 bg-slate-50 border-slate-200 hover:bg-green-50 hover:text-green-600'}`}
                                         title={user.status === 'ACTIVE' ? 'Desactivar Usuario' : 'Activar Usuario'}
@@ -793,7 +793,7 @@ const AdminUserManagement: React.FC<{ onSelectUser: (u: User) => void, currentUs
                                     </button>
                                 </div>
                             </div>
-                            
+
                             <div className="flex gap-2 flex-wrap">
                                 <span className={`px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wide flex items-center gap-1 ${roleColor}`}>
                                     {roleLabel}
@@ -810,10 +810,10 @@ const AdminUserManagement: React.FC<{ onSelectUser: (u: User) => void, currentUs
 
                             <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-50">
                                 <button onClick={() => onSelectUser(user)} className="bg-slate-900 text-white py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 hover:bg-slate-800 transition-colors">
-                                    <Edit size={14}/> Editar
+                                    <Edit size={14} /> Editar
                                 </button>
                                 <button onClick={() => deleteUser(user.id)} className="bg-white border border-slate-200 text-slate-400 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 hover:bg-red-50 hover:text-red-500 hover:border-red-200 transition-colors">
-                                    <Trash2 size={14}/> Eliminar
+                                    <Trash2 size={14} /> Eliminar
                                 </button>
                             </div>
                         </div>
@@ -827,7 +827,7 @@ const AdminUserManagement: React.FC<{ onSelectUser: (u: User) => void, currentUs
                     <div className="bg-white w-full max-w-md rounded-t-3xl md:rounded-3xl p-6 shadow-2xl animate-in slide-in-from-bottom duration-300">
                         <div className="flex justify-between items-center mb-6">
                             <h3 className="text-xl font-bold text-slate-800">Crear Usuario</h3>
-                            <button onClick={() => setShowCreateModal(false)} className="text-slate-400 hover:text-slate-600"><X size={24}/></button>
+                            <button onClick={() => setShowCreateModal(false)} className="text-slate-400 hover:text-slate-600"><X size={24} /></button>
                         </div>
                         <div className="space-y-4">
                             <div>
@@ -862,7 +862,7 @@ const AdminView: React.FC<{ currentUser: User; onLogout: () => void }> = ({ curr
 
     return (
         <div className="flex h-screen bg-slate-100 overflow-hidden font-sans text-slate-800">
-             <aside className="hidden md:flex w-20 bg-slate-900 text-white flex-col items-center py-6 gap-8 z-20 shadow-xl">
+            <aside className="hidden md:flex w-20 bg-slate-900 text-white flex-col items-center py-6 gap-8 z-20 shadow-xl">
                 <div className="w-10 h-10 bg-indigo-500 rounded-xl flex items-center justify-center text-white font-bold shadow-lg shadow-indigo-900/50">A.</div>
                 <nav className="flex-1 flex flex-col gap-4 w-full px-2">
                     <button onClick={() => setActiveTab('global')} className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${activeTab === 'global' ? 'bg-indigo-600 text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Activity size={24} /></button>
@@ -876,12 +876,12 @@ const AdminView: React.FC<{ currentUser: User; onLogout: () => void }> = ({ curr
                 </div>
             </aside>
 
-             <main className="flex-1 relative bg-slate-50 overflow-hidden flex flex-col">
+            <main className="flex-1 relative bg-slate-50 overflow-hidden flex flex-col">
                 {activeTab === 'global' && <div className="h-full overflow-y-auto p-4 md:p-8 pb-24"><AdminGlobalPanel /></div>}
                 {activeTab === 'users' && <AdminUserManagement currentUserRole="ADMIN" onSelectUser={(u) => console.log('Selected user:', u)} />}
                 {activeTab === 'content' && <ContentManager />}
                 {activeTab === 'settings' && <AdminSettings />}
-             </main>
+            </main>
 
             {/* Admin Mobile Navigation */}
             <div className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-slate-200 flex justify-around items-center z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
@@ -909,7 +909,7 @@ const CoordinatorView: React.FC<{ currentUser: User; onLogout: () => void }> = (
 
     return (
         <div className="flex h-screen bg-slate-100 overflow-hidden font-sans text-slate-800">
-             <aside className="hidden md:flex w-20 bg-slate-900 text-white flex-col items-center py-6 gap-8 z-20 shadow-xl">
+            <aside className="hidden md:flex w-20 bg-slate-900 text-white flex-col items-center py-6 gap-8 z-20 shadow-xl">
                 <div className="w-10 h-10 bg-slate-100 text-slate-800 rounded-xl flex items-center justify-center font-bold shadow-lg">C.</div>
                 <nav className="flex-1 flex flex-col gap-4 w-full px-2">
                     <button onClick={() => setActiveTab('clients')} className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${activeTab === 'clients' ? 'bg-slate-700 text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Activity size={24} /></button>
@@ -947,7 +947,7 @@ const CoordinatorView: React.FC<{ currentUser: User; onLogout: () => void }> = (
                 </>
             ) : (
                 <main className="flex-1 relative bg-slate-50 overflow-hidden flex flex-col">
-                    {activeTab === 'calendar' && <div className="h-full overflow-y-auto pb-20 md:pb-0"><ProCalendarModule onSelectClient={(c) => {setSelectedClient(c); setActiveTab('clients');}} /></div>}
+                    {activeTab === 'calendar' && <div className="h-full overflow-y-auto pb-20 md:pb-0"><ProCalendarModule onSelectClient={(c) => { setSelectedClient(c); setActiveTab('clients'); }} /></div>}
                     {activeTab === 'users' && <AdminUserManagement currentUserRole="COORDINATOR" onSelectUser={(u) => console.log(u)} />}
                     {activeTab === 'content' && <ContentManager />}
                 </main>
@@ -966,59 +966,59 @@ const CoordinatorView: React.FC<{ currentUser: User; onLogout: () => void }> = (
 }
 
 export const AdminDashboard: React.FC<Props> = ({ currentUser, onLogout }) => {
-  if (currentUser.role === 'ADMIN') {
-    return <AdminView currentUser={currentUser} onLogout={onLogout} />;
-  }
-  if (currentUser.role === 'COORDINATOR') {
-    return <CoordinatorView currentUser={currentUser} onLogout={onLogout} />;
-  }
-  
-  // Professional View implementation
-  const [selectedClient, setSelectedClient] = useState<ClientProfile | null>(MOCK_CLIENT_W1);
-  const [activeSidebarTab, setActiveSidebarTab] = useState<'clients' | 'calendar'>('clients');
-  const [isMobileDetailOpen, setIsMobileDetailOpen] = useState(false);
+    if (currentUser.role === 'ADMIN') {
+        return <AdminView currentUser={currentUser} onLogout={onLogout} />;
+    }
+    if (currentUser.role === 'COORDINATOR') {
+        return <CoordinatorView currentUser={currentUser} onLogout={onLogout} />;
+    }
 
-  const handleClientSelect = (client: ClientProfile) => {
-      setSelectedClient(client);
-      setIsMobileDetailOpen(true);
-      setActiveSidebarTab('clients');
-  };
+    // Professional View implementation
+    const [selectedClient, setSelectedClient] = useState<ClientProfile | null>(MOCK_CLIENT_W1);
+    const [activeSidebarTab, setActiveSidebarTab] = useState<'clients' | 'calendar'>('clients');
+    const [isMobileDetailOpen, setIsMobileDetailOpen] = useState(false);
 
-  return (
-      <div className="flex h-screen bg-slate-100 overflow-hidden font-sans text-slate-800">
-           <aside className="hidden md:flex w-20 bg-slate-900 text-white flex-col items-center py-6 gap-8 z-20 shadow-xl">
-              <div className="w-10 h-10 bg-brand-500 rounded-xl flex items-center justify-center text-white font-bold shadow-lg shadow-brand-900/50">P.</div>
-              <nav className="flex-1 flex flex-col gap-4 w-full px-2">
-                  <button onClick={() => setActiveSidebarTab('clients')} className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${activeSidebarTab === 'clients' ? 'bg-brand-600 text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Users size={24} /></button>
-                  <button onClick={() => setActiveSidebarTab('calendar')} className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${activeSidebarTab === 'calendar' ? 'bg-brand-600 text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><CalendarIcon size={24} /></button>
-              </nav>
-              <div className="flex flex-col gap-4">
-                  <button onClick={onLogout} className="w-10 h-10 rounded-full bg-slate-800 hover:bg-red-500/20 hover:text-red-400 text-slate-400 flex items-center justify-center transition-colors"><LogOut size={18} /></button>
-                  <img src={currentUser.avatar} className="w-10 h-10 rounded-full border-2 border-slate-700" alt="Profile" />
-              </div>
-           </aside>
+    const handleClientSelect = (client: ClientProfile) => {
+        setSelectedClient(client);
+        setIsMobileDetailOpen(true);
+        setActiveSidebarTab('clients');
+    };
 
-           <div className={`hidden md:flex w-80 bg-white border-r border-slate-200 z-10 flex-col shadow-sm transition-all duration-300 ${activeSidebarTab === 'clients' ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0 absolute'}`}>
-              <ProClientsList onSelect={handleClientSelect} selectedId={selectedClient?.id} />
-           </div>
+    return (
+        <div className="flex h-screen bg-slate-100 overflow-hidden font-sans text-slate-800">
+            <aside className="hidden md:flex w-20 bg-slate-900 text-white flex-col items-center py-6 gap-8 z-20 shadow-xl">
+                <div className="w-10 h-10 bg-brand-500 rounded-xl flex items-center justify-center text-white font-bold shadow-lg shadow-brand-900/50">P.</div>
+                <nav className="flex-1 flex flex-col gap-4 w-full px-2">
+                    <button onClick={() => setActiveSidebarTab('clients')} className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${activeSidebarTab === 'clients' ? 'bg-brand-600 text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><Users size={24} /></button>
+                    <button onClick={() => setActiveSidebarTab('calendar')} className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${activeSidebarTab === 'calendar' ? 'bg-brand-600 text-white shadow-lg' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}><CalendarIcon size={24} /></button>
+                </nav>
+                <div className="flex flex-col gap-4">
+                    <button onClick={onLogout} className="w-10 h-10 rounded-full bg-slate-800 hover:bg-red-500/20 hover:text-red-400 text-slate-400 flex items-center justify-center transition-colors"><LogOut size={18} /></button>
+                    <img src={currentUser.avatar} className="w-10 h-10 rounded-full border-2 border-slate-700" alt="Profile" />
+                </div>
+            </aside>
 
-           <main className="flex-1 relative bg-slate-50 overflow-hidden flex flex-col">
-              <div className="hidden md:block h-full w-full">
-                  {activeSidebarTab === 'calendar' ? <ProCalendarModule onSelectClient={handleClientSelect} /> : (selectedClient ? <ProClientDetail client={selectedClient} /> : <div className="h-full flex items-center justify-center text-slate-400"><p>Selecciona un paciente</p></div>)}
-              </div>
+            <div className={`hidden md:flex w-80 bg-white border-r border-slate-200 z-10 flex-col shadow-sm transition-all duration-300 ${activeSidebarTab === 'clients' ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0 absolute'}`}>
+                <ProClientsList onSelect={handleClientSelect} selectedId={selectedClient?.id} />
+            </div>
 
-              <div className="md:hidden h-full w-full relative">
-                  {isMobileDetailOpen && selectedClient && activeSidebarTab === 'clients' && <div className="absolute inset-0 z-30 bg-white animate-in slide-in-from-right duration-200"><ProClientDetail client={selectedClient} onBack={() => setIsMobileDetailOpen(false)} /></div>}
-                  {activeSidebarTab === 'calendar' && <div className="absolute inset-0 z-20 bg-white pb-20"><ProCalendarModule onSelectClient={handleClientSelect} /></div>}
-                  {activeSidebarTab === 'clients' && !isMobileDetailOpen && <div className="absolute inset-0 z-20 bg-white pb-20"><ProClientsList onSelect={handleClientSelect} selectedId={selectedClient?.id} /></div>}
-              </div>
-           </main>
+            <main className="flex-1 relative bg-slate-50 overflow-hidden flex flex-col">
+                <div className="hidden md:block h-full w-full">
+                    {activeSidebarTab === 'calendar' ? <ProCalendarModule onSelectClient={handleClientSelect} /> : (selectedClient ? <ProClientDetail client={selectedClient} /> : <div className="h-full flex items-center justify-center text-slate-400"><p>Selecciona un paciente</p></div>)}
+                </div>
 
-          <div className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-slate-200 flex justify-around items-center z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-              <button onClick={() => { setActiveSidebarTab('clients'); setIsMobileDetailOpen(false); }} className={`flex flex-col items-center gap-1 ${activeSidebarTab === 'clients' ? 'text-brand-600' : 'text-slate-400'}`}><Users size={20} /><span className="text-[10px] font-bold">Pacientes</span></button>
-              <button onClick={() => setActiveSidebarTab('calendar')} className={`flex flex-col items-center gap-1 ${activeSidebarTab === 'calendar' ? 'text-brand-600' : 'text-slate-400'}`}><CalendarIcon size={20} /><span className="text-[10px] font-bold">Agenda</span></button>
-              <button onClick={onLogout} className="flex flex-col items-center gap-1 text-slate-400 hover:text-red-500"><LogOut size={20} /><span className="text-[10px] font-bold">Salir</span></button>
-          </div>
-      </div>
-  );
+                <div className="md:hidden h-full w-full relative">
+                    {isMobileDetailOpen && selectedClient && activeSidebarTab === 'clients' && <div className="absolute inset-0 z-30 bg-white animate-in slide-in-from-right duration-200"><ProClientDetail client={selectedClient} onBack={() => setIsMobileDetailOpen(false)} /></div>}
+                    {activeSidebarTab === 'calendar' && <div className="absolute inset-0 z-20 bg-white pb-20"><ProCalendarModule onSelectClient={handleClientSelect} /></div>}
+                    {activeSidebarTab === 'clients' && !isMobileDetailOpen && <div className="absolute inset-0 z-20 bg-white pb-20"><ProClientsList onSelect={handleClientSelect} selectedId={selectedClient?.id} /></div>}
+                </div>
+            </main>
+
+            <div className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-slate-200 flex justify-around items-center z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+                <button onClick={() => { setActiveSidebarTab('clients'); setIsMobileDetailOpen(false); }} className={`flex flex-col items-center gap-1 ${activeSidebarTab === 'clients' ? 'text-brand-600' : 'text-slate-400'}`}><Users size={20} /><span className="text-[10px] font-bold">Pacientes</span></button>
+                <button onClick={() => setActiveSidebarTab('calendar')} className={`flex flex-col items-center gap-1 ${activeSidebarTab === 'calendar' ? 'text-brand-600' : 'text-slate-400'}`}><CalendarIcon size={20} /><span className="text-[10px] font-bold">Agenda</span></button>
+                <button onClick={onLogout} className="flex flex-col items-center gap-1 text-slate-400 hover:text-red-500"><LogOut size={20} /><span className="text-[10px] font-bold">Salir</span></button>
+            </div>
+        </div>
+    );
 };
