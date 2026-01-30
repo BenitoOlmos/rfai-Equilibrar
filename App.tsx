@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ClientProfile } from './types';
 import { ClientDashboard } from './components/ClientDashboard';
 import { AdminDashboard } from './components/AdminDashboard';
-import { Eye, EyeOff, ArrowRight, HelpCircle, Moon } from 'lucide-react';
+import { Eye, EyeOff, ArrowRight, HelpCircle, Moon, Sun } from 'lucide-react';
 import { BrandLogo } from './components/BrandLogo';
 import { authService } from './src/services/api';
 
@@ -12,6 +12,7 @@ const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin 
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,46 +58,71 @@ const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin 
     setError('');
   };
 
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    if (!darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
+
+  const openFAQ = () => {
+    window.open('https://equilibrar.cl/preguntas-frecuentes', '_blank');
+  };
+
   return (
-    <div className="min-h-screen min-h-[100dvh] flex items-center justify-center bg-white font-sans relative overflow-hidden">
+    <div className={`min-h-screen flex items-center justify-center font-sans relative overflow-auto py-8 ${darkMode ? 'bg-slate-900' : 'bg-white'}`}>
 
       {/* Background Decor from design */}
-      <div className="absolute top-0 w-full h-full bg-white"></div>
+      <div className={`absolute top-0 w-full h-full ${darkMode ? 'bg-slate-900' : 'bg-white'}`}></div>
 
-      <div className="w-full max-w-[550px] bg-white rounded-[2rem] md:rounded-[3rem] shadow-none md:shadow-[0_20px_50px_rgba(0,0,0,0.05)] border-0 md:border border-slate-100 p-6 md:p-12 relative z-10 flex flex-col items-center">
+      <div className={`w-full max-w-[550px] rounded-[2rem] md:rounded-[3rem] shadow-none md:shadow-[0_20px_50px_rgba(0,0,0,0.05)] border-0 md:border p-6 md:p-12 relative z-10 flex flex-col items-center my-8 ${darkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100'
+        }`}>
 
         {/* Header Logo */}
-        <div className="mb-8 md:mb-10 w-32 h-32 md:w-48 md:h-48 -mt-16 md:-mt-24 bg-white rounded-full flex items-center justify-center shadow-sm z-20">
+        <div className={`mb-8 md:mb-10 w-32 h-32 md:w-48 md:h-48 -mt-20 md:-mt-28 rounded-full flex items-center justify-center shadow-sm z-20 ${darkMode ? 'bg-slate-800' : 'bg-white'
+          }`}>
           <BrandLogo className="w-24 h-24 md:w-40 md:h-40 scale-125" />
         </div>
 
-        <h1 className="text-2xl md:text-3xl font-light text-slate-800 mb-6 md:mb-8 text-center">
+        <h1 className={`text-2xl md:text-3xl font-light mb-6 md:mb-8 text-center ${darkMode ? 'text-white' : 'text-slate-800'
+          }`}>
           Plataforma <span className="font-bold text-brand-500">RFAI</span>
         </h1>
 
         <form onSubmit={handleLogin} className="w-full space-y-5 md:space-y-6">
           <div className="space-y-2">
-            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Correo Electrónico</label>
+            <label className={`block text-[10px] font-bold uppercase tracking-widest pl-1 ${darkMode ? 'text-slate-400' : 'text-slate-400'
+              }`}>Correo Electrónico</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-6 py-4 rounded-full bg-slate-50/50 border border-slate-100 focus:border-brand-500 focus:ring-1 focus:ring-brand-200 outline-none transition-all text-slate-600 placeholder:text-slate-300 font-medium text-base"
+              className={`w-full px-6 py-4 rounded-full border focus:border-brand-500 focus:ring-1 focus:ring-brand-200 outline-none transition-all font-medium text-base ${darkMode
+                  ? 'bg-slate-700 border-slate-600 text-white placeholder:text-slate-400'
+                  : 'bg-slate-50/50 border-slate-100 text-slate-600 placeholder:text-slate-300'
+                }`}
               placeholder="ejemplo@clinica.com"
             />
           </div>
 
           <div className="space-y-2">
-            <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Contraseña</label>
+            <label className={`block text-[10px] font-bold uppercase tracking-widest pl-1 ${darkMode ? 'text-slate-400' : 'text-slate-400'
+              }`}>Contraseña</label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-6 py-4 rounded-full bg-slate-50/50 border border-slate-100 focus:border-brand-500 focus:ring-1 focus:ring-brand-200 outline-none transition-all text-slate-600 placeholder:text-slate-300 font-medium tracking-widest text-base"
+                className={`w-full px-6 py-4 rounded-full border focus:border-brand-500 focus:ring-1 focus:ring-brand-200 outline-none transition-all font-medium tracking-widest text-base ${darkMode
+                    ? 'bg-slate-700 border-slate-600 text-white placeholder:text-slate-400'
+                    : 'bg-slate-50/50 border-slate-100 text-slate-600 placeholder:text-slate-300'
+                  }`}
                 placeholder="••••••••"
               />
-              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-300 hover:text-brand-500 transition-colors p-2">
+              <button type="button" onClick={() => setShowPassword(!showPassword)} className={`absolute right-6 top-1/2 -translate-y-1/2 transition-colors p-2 ${darkMode ? 'text-slate-400 hover:text-brand-500' : 'text-slate-300 hover:text-brand-500'
+                }`}>
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
@@ -113,66 +139,94 @@ const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin 
           </button>
 
           <div className="text-center">
-            <button type="button" className="text-sm text-slate-400 hover:text-brand-600 transition-colors font-medium p-2">
+            <button type="button" className={`text-sm transition-colors font-medium p-2 ${darkMode ? 'text-slate-400 hover:text-brand-500' : 'text-slate-400 hover:text-brand-600'
+              }`}>
               ¿Olvidaste tu contraseña?
             </button>
           </div>
         </form>
 
         {/* Demo Section */}
-        <div className="mt-8 md:mt-12 w-full pt-8 border-t border-slate-50">
-          <p className="text-center text-[10px] text-slate-400 mb-4 md:mb-6 uppercase font-bold tracking-widest">Accesos Demo - Programa Culpa</p>
+        <div className={`mt-8 md:mt-12 w-full pt-8 border-t ${darkMode ? 'border-slate-700' : 'border-slate-50'
+          }`}>
+          <p className={`text-center text-[10px] mb-4 md:mb-6 uppercase font-bold tracking-widest ${darkMode ? 'text-slate-500' : 'text-slate-400'
+            }`}>Accesos Demo - Programa Culpa</p>
 
           <div className="grid grid-cols-4 gap-2 mb-4 md:mb-6">
             <button
               onClick={() => handleStaffPreload('lucia@client.com', 'demo123')}
-              className="py-2 px-1 rounded-lg border border-slate-100 text-[9px] font-bold text-slate-600 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50 transition-all active:scale-95"
+              className={`py-2 px-1 rounded-lg border text-[9px] font-bold transition-all active:scale-95 ${darkMode
+                  ? 'border-slate-600 text-slate-300 hover:border-brand-500 hover:text-brand-500 hover:bg-slate-700'
+                  : 'border-slate-100 text-slate-600 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50'
+                }`}
               type="button">
               Lucía<br />S1
             </button>
             <button
               onClick={() => handleStaffPreload('carlos@client.com', 'demo123')}
-              className="py-2 px-1 rounded-lg border border-slate-100 text-[9px] font-bold text-slate-600 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50 transition-all active:scale-95"
+              className={`py-2 px-1 rounded-lg border text-[9px] font-bold transition-all active:scale-95 ${darkMode
+                  ? 'border-slate-600 text-slate-300 hover:border-brand-500 hover:text-brand-500 hover:bg-slate-700'
+                  : 'border-slate-100 text-slate-600 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50'
+                }`}
               type="button">
               Carlos<br />S2
             </button>
             <button
               onClick={() => handleStaffPreload('pedro@client.com', 'demo123')}
-              className="py-2 px-1 rounded-lg border border-slate-100 text-[9px] font-bold text-slate-600 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50 transition-all active:scale-95"
+              className={`py-2 px-1 rounded-lg border text-[9px] font-bold transition-all active:scale-95 ${darkMode
+                  ? 'border-slate-600 text-slate-300 hover:border-brand-500 hover:text-brand-500 hover:bg-slate-700'
+                  : 'border-slate-100 text-slate-600 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50'
+                }`}
               type="button">
               Pedro<br />S3
             </button>
             <button
               onClick={() => handleStaffPreload('ana@client.com', 'demo123')}
-              className="py-2 px-1 rounded-lg border border-slate-100 text-[9px] font-bold text-slate-600 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50 transition-all active:scale-95"
+              className={`py-2 px-1 rounded-lg border text-[9px] font-bold transition-all active:scale-95 ${darkMode
+                  ? 'border-slate-600 text-slate-300 hover:border-brand-500 hover:text-brand-500 hover:bg-slate-700'
+                  : 'border-slate-100 text-slate-600 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50'
+                }`}
               type="button">
               Ana<br />S4
             </button>
           </div>
 
-          <p className="text-center text-[10px] text-indigo-400 mb-4 md:mb-6 uppercase font-bold tracking-widest">Accesos Demo - Programa Angustia</p>
+          <p className={`text-center text-[10px] mb-4 md:mb-6 uppercase font-bold tracking-widest ${darkMode ? 'text-indigo-400' : 'text-indigo-400'
+            }`}>Accesos Demo - Programa Angustia</p>
           <div className="grid grid-cols-4 gap-2 mb-6">
             <button
               onClick={() => handleStaffPreload('paula@angustia.com', 'demo123')}
-              className="py-2 px-1 rounded-lg border border-slate-100 text-[9px] font-bold text-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 transition-all active:scale-95"
+              className={`py-2 px-1 rounded-lg border text-[9px] font-bold transition-all active:scale-95 ${darkMode
+                  ? 'border-slate-600 text-slate-300 hover:border-indigo-500 hover:text-indigo-400 hover:bg-slate-700'
+                  : 'border-slate-100 text-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50'
+                }`}
               type="button">
               Paula<br />S1
             </button>
             <button
               onClick={() => handleStaffPreload('jorge@angustia.com', 'demo123')}
-              className="py-2 px-1 rounded-lg border border-slate-100 text-[9px] font-bold text-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 transition-all active:scale-95"
+              className={`py-2 px-1 rounded-lg border text-[9px] font-bold transition-all active:scale-95 ${darkMode
+                  ? 'border-slate-600 text-slate-300 hover:border-indigo-500 hover:text-indigo-400 hover:bg-slate-700'
+                  : 'border-slate-100 text-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50'
+                }`}
               type="button">
               Jorge<br />S2
             </button>
             <button
               onClick={() => handleStaffPreload('sofia@angustia.com', 'demo123')}
-              className="py-2 px-1 rounded-lg border border-slate-100 text-[9px] font-bold text-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 transition-all active:scale-95"
+              className={`py-2 px-1 rounded-lg border text-[9px] font-bold transition-all active:scale-95 ${darkMode
+                  ? 'border-slate-600 text-slate-300 hover:border-indigo-500 hover:text-indigo-400 hover:bg-slate-700'
+                  : 'border-slate-100 text-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50'
+                }`}
               type="button">
               Sofía<br />S3
             </button>
             <button
               onClick={() => handleStaffPreload('miguel@angustia.com', 'demo123')}
-              className="py-2 px-1 rounded-lg border border-slate-100 text-[9px] font-bold text-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 transition-all active:scale-95"
+              className={`py-2 px-1 rounded-lg border text-[9px] font-bold transition-all active:scale-95 ${darkMode
+                  ? 'border-slate-600 text-slate-300 hover:border-indigo-500 hover:text-indigo-400 hover:bg-slate-700'
+                  : 'border-slate-100 text-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50'
+                }`}
               type="button">
               Miguel<br />S4
             </button>
@@ -181,13 +235,19 @@ const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin 
           <div className="grid grid-cols-3 gap-2">
             <button
               onClick={() => handleStaffPreload('coordinacion@test.cl', 'se1234')}
-              className="py-3 px-2 rounded-xl bg-slate-50 text-[10px] font-bold text-slate-600 hover:bg-slate-100 transition-all uppercase tracking-wide active:scale-95"
+              className={`py-3 px-2 rounded-xl text-[10px] font-bold transition-all uppercase tracking-wide active:scale-95 ${darkMode
+                  ? 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                  : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
+                }`}
               type="button">
               Coordinador
             </button>
             <button
               onClick={() => handleStaffPreload('profesional@test.cl', 'cr1234')}
-              className="py-3 px-2 rounded-xl bg-slate-50 text-[10px] font-bold text-slate-600 hover:bg-slate-100 transition-all uppercase tracking-wide active:scale-95"
+              className={`py-3 px-2 rounded-xl text-[10px] font-bold transition-all uppercase tracking-wide active:scale-95 ${darkMode
+                  ? 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                  : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
+                }`}
               type="button">
               Profesional
             </button>
@@ -202,12 +262,23 @@ const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin 
 
         {/* Footer */}
         <div className="mt-8 md:mt-12 mb-4 text-center">
-          <p className="text-[10px] font-bold text-slate-300 uppercase tracking-[0.2em] mb-4">Centro Clínico Equilibrar © 2024</p>
+          <p className={`text-[10px] font-bold uppercase tracking-[0.2em] mb-4 ${darkMode ? 'text-slate-600' : 'text-slate-300'
+            }`}>Centro Clínico Equilibrar © 2024</p>
           <div className="flex justify-center gap-4">
-            <button className="w-8 h-8 rounded-full border border-slate-100 flex items-center justify-center text-slate-300 hover:text-brand-500 hover:border-brand-200 transition-all p-0">
-              <Moon size={14} />
+            <button
+              onClick={toggleDarkMode}
+              className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all p-0 ${darkMode
+                  ? 'border-slate-600 text-brand-500 hover:text-brand-400 hover:border-brand-400'
+                  : 'border-slate-100 text-slate-300 hover:text-brand-500 hover:border-brand-200'
+                }`}>
+              {darkMode ? <Sun size={14} /> : <Moon size={14} />}
             </button>
-            <button className="w-8 h-8 rounded-full border border-slate-100 flex items-center justify-center text-slate-300 hover:text-brand-500 hover:border-brand-200 transition-all p-0">
+            <button
+              onClick={openFAQ}
+              className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all p-0 ${darkMode
+                  ? 'border-slate-600 text-slate-400 hover:text-brand-500 hover:border-brand-400'
+                  : 'border-slate-100 text-slate-300 hover:text-brand-500 hover:border-brand-200'
+                }`}>
               <HelpCircle size={14} />
             </button>
           </div>
