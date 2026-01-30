@@ -108,6 +108,16 @@ app.use('/api/guias', guiasRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/recursos', recursosRoutes);
 
+// Servir página de prueba
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+app.get('/test-login', (req, res) => {
+    res.sendFile(join(__dirname, '../test-login.html'));
+});
+
 // 404 handler
 app.use((req, res) => {
     res.status(404).json({

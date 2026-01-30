@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RFAI - Probador de Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .user-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .user-btn {
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .user-btn:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .user-btn.active {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .user-btn .name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .user-btn .email {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .user-btn .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-top: 6px;
+        }
+
+        .badge.new {
+            background: #ffeaa7;
+            color: #d63031;
+        }
+
+        .badge.advanced {
+            background: #81ecec;
+            color: #00b894;
+        }
+
+        .badge.completed {
+            background: #55efc4;
+            color: #00b894;
+        }
+
+        .badge.professional {
+            background: #a29bfe;
+            color: #6c5ce7;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .login-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .response-box {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .response-box.show {
+            display: block;
+        }
+
+        .response-box.success {
+            background: #d4edda;
+            border: 2px solid #c3e6cb;
+        }
+
+        .response-box.error {
+            background: #f8d7da;
+            border: 2px solid #f5c6cb;
+        }
+
+        .response-box h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .response-box pre {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            line-height: 1.5;
+        }
+
+        .status {
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .status.online {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status.offline {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 RFAI - Probador de Login</h1>
+        <p class="subtitle">Selecciona un usuario y haz click en "Iniciar Sesión" para probar el backend</p>
+
+        <div id="status" class="status"><span class="loader"></span> Verificando servidor...</div>
+
+        <div class="user-buttons">
+            <button class="user-btn" data-email="ana.martinez@test.com">
+                <div class="name">👩 Ana Martínez</div>
+                <div class="email">ana.martinez@test.com</div>
+                <span class="badge new">Nuevo - Semana 1</span>
+            </button>
+
+            <button class="user-btn" data-email="bruno.silva@test.com">
+                <div class="name">👨 Bruno Silva</div>
+                <div class="email">bruno.silva@test.com</div>
+                <span class="badge advanced">Avanzado - Semana 2-3</span>
+            </button>
+
+            <button class="user-btn" data-email="carla.rojas@test.com">
+                <div class="name">👩 Carla Rojas</div>
+                <div class="email">carla.rojas@test.com</div>
+                <span class="badge completed">Completado - 100%</span>
+            </button>
+
+            <button class="user-btn" data-email="david.lopez@clinica.com">
+                <div class="name">👨‍⚕️ Dr. David López</div>
+                <div class="email">david.lopez@clinica.com</div>
+                <span class="badge professional">Profesional</span>
+            </button>
+        </div>
+
+        <button id="loginBtn" class="login-btn" disabled>
+            Selecciona un usuario primero
+        </button>
+
+        <div id="response" class="response-box"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3005';
+        let selectedEmail = null;
+
+        // Verificar estado del servidor
+        async function checkServerStatus() {
+            const statusDiv = document.getElementById('status');
+            try {
+                const response = await fetch(`${API_URL}/api/health`);
+                const data = await response.json();
+                
+                statusDiv.className = 'status online';
+                statusDiv.innerHTML = `
+                    ✅ Servidor Online | 
+                    ${data.stats.usuarios} usuarios | 
+                    ${data.stats.programas} programas
+                `;
+            } catch (error) {
+                statusDiv.className = 'status offline';
+                statusDiv.innerHTML = '❌ Servidor Offline - Verifica que esté corriendo en puerto 3005';
+            }
+        }
+
+        // Seleccionar usuario
+        document.querySelectorAll('.user-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.user-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedEmail = btn.dataset.email;
+                
+                const loginBtn = document.getElementById('loginBtn');
+                loginBtn.disabled = false;
+                loginBtn.textContent = `Iniciar Sesión como ${btn.querySelector('.name').textContent}`;
+            });
+        });
+
+        // Login
+        document.getElementById('loginBtn').addEventListener('click', async () => {
+            if (!selectedEmail) return;
+
+            const loginBtn = document.getElementById('loginBtn');
+            const responseDiv = document.getElementById('response');
+            
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = 'Iniciando sesión... <span class="loader"></span>';
+            
+            responseDiv.classList.remove('show', 'success', 'error');
+
+            try {
+                const response = await fetch(`${API_URL}/api/dev/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email: selectedEmail })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    responseDiv.className = 'response-box show success';
+                    responseDiv.innerHTML = `
+                        <h3>✅ Login Exitoso</h3>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    responseDiv.className = 'response-box show error';
+                    responseDiv.innerHTML = `
+                        <h3>❌ Error en Login</h3>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                responseDiv.className = 'response-box show error';
+                responseDiv.innerHTML = `
+                    <h3>❌ Error de Conexión</h3>
+                    <pre>${error.message}</pre>
+                `;
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.textContent = `Iniciar Sesión como ${selectedEmail}`;
+            }
+        });
+
+        // Verificar servidor al cargar
+        checkServerStatus();
+        setInterval(checkServerStatus, 10000); // Cada 10 segundos
+    </script>
+</body>
+</html>
