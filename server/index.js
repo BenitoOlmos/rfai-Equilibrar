@@ -8,6 +8,8 @@ import guiasRoutes from './routes/guiasRoutes.js';
 import analyticsRoutes from './routes/analyticsRoutes.js';
 import recursosRoutes from './routes/recursosRoutes.js';
 import devRoutes from './routes/devRoutes.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
+import professionalRoutes from './routes/professionalRoutes.js';
 
 dotenv.config();
 
@@ -111,6 +113,8 @@ app.post('/api/auth/login', async (req, res) => {
 app.use('/api/guias', guiasRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/recursos', recursosRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/professional', professionalRoutes);
 
 // Servir página de prueba
 import { fileURLToPath } from 'url';

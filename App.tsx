@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ClientProfile } from './types';
 import { ClientDashboard } from './components/ClientDashboard';
 import { AdminDashboard } from './components/AdminDashboard';
+import { ProfessionalDashboard } from './components/ProfessionalDashboard';
 import { Eye, EyeOff, ArrowRight, HelpCircle, Moon, Sun } from 'lucide-react';
 import { BrandLogo } from './components/BrandLogo';
-import { authService } from './src/services/api';
+import { authService, dashboardService } from './src/services/api';
 
 const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin }) => {
   const [email, setEmail] = useState('');
@@ -291,11 +292,52 @@ const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin 
 
 export default function App() {
   const [userSession, setUserSession] = useState<any | null>(null);
+  const [clientProfile, setClientProfile] = useState<ClientProfile | null>(null);
+  const [isLoadingProfile, setIsLoadingProfile] = useState(false);
 
   const handleLogout = () => {
     setUserSession(null);
+    setClientProfile(null);
     localStorage.removeItem('rfai_session');
   };
+
+  // Cargar perfil del cliente cuando hay sesión
+  useEffect(() => {
+    if (userSession && userSession.user.rol === 'CLIENTE') {
+      setIsLoadingProfile(true);
+      dashboardService.getClientProfile(userSession.user.id)
+        .then((profile) => {
+          setClientProfile(profile);
+        })
+        .catch((error) => {
+          console.error('Error al cargar perfil:', error);
+          // Crear fallback profile
+          const fallbackProfile: ClientProfile = {
+            id: userSession.user.id,
+            name: userSession.user.nombre,
+            email: userSession.user.email,
+            role: 'CLIENT',
+            avatar: 'https://picsum.photos/200/200?random=1',
+            status: 'ACTIVE',
+            currentWeek: Math.min(Math.max(1, userSession.semanasDisponibles || 1), 4) as 1 | 2 | 3 | 4,
+            startDate: userSession.matricula?.fechaInicio || new Date().toISOString(),
+            nextSession: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+            program: userSession.matricula?.dimension || 'ANGUSTIA',
+            progress: {
+              week1: { isLocked: false, isCompleted: false, initialTestDone: false, guideCompleted: false, audioListened: 0, meetingAttended: false },
+              week2: { isLocked: true, isCompleted: false, guideCompleted: false, audioListened: 0 },
+              week3: { isLocked: true, isCompleted: false, guideCompleted: false, audioListened: 0 },
+              week4: { isLocked: true, isCompleted: false, guideCompleted: false, audioListened: 0 }
+            },
+            clinicalData: { testScores: [], audioUsage: [] }
+          };
+          setClientProfile(fallbackProfile);
+        })
+        .finally(() => {
+          setIsLoadingProfile(false);
+        });
+    }
+  }, [userSession]);
 
   if (!userSession) {
     return <LoginPage onLogin={(sessionData) => {
@@ -307,55 +349,32 @@ export default function App() {
   const rol = userSession.user.rol;
 
   if (rol === 'CLIENTE') {
-    // Convertir formato backend a formato que espera ClientDashboard
-    const clientProfile: ClientProfile = {
-      id: userSession.user.id,
-      name: userSession.user.nombre,
-      email: userSession.user.email,
-      role: 'CLIENT',
-      avatar: 'https://picsum.photos/200/200?random=1',
-      status: 'ACTIVE',
-      currentWeek: Math.min(Math.max(1, userSession.semanasDisponibles || 1), 4) as 1 | 2 | 3 | 4,
-      startDate: userSession.matricula?.fechaInicio || new Date().toISOString(),
-      nextSession: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-      program: userSession.matricula?.dimension || 'ANGUSTIA',
-      progress: {
-        week1: {
-          isLocked: false,
-          isCompleted: (userSession.semanasDisponibles || 0) > 1,
-          initialTestDone: (userSession.semanasDisponibles || 0) >= 1,
-          guideCompleted: false,
-          audioListened: 0,
-          meetingAttended: false
-        },
-        week2: {
-          isLocked: (userSession.semanasDisponibles || 0) < 2,
-          isCompleted: (userSession.semanasDisponibles || 0) > 2,
-          guideCompleted: false,
-          audioListened: 0
-        },
-        week3: {
-          isLocked: (userSession.semanasDisponibles || 0) < 3,
-          isCompleted: (userSession.semanasDisponibles || 0) > 3,
-          guideCompleted: false,
-          audioListened: 0
-        },
-        week4: {
-          isLocked: (userSession.semanasDisponibles || 0) < 4,
-          isCompleted: false,
-          guideCompleted: false,
-          audioListened: 0
-        }
-      },
-      clinicalData: {
-        testScores: [],
-        audioUsage: []
-      }
-    };
+    if (isLoadingProfile) {
+      return <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-500 mx-auto mb-4"></div>
+          <p className="text-slate-600">Cargando perfil...</p>
+        </div>
+      </div>;
+    }
+
+    if (!clientProfile) {
+      return <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <p className="text-red-500">Error al cargar perfil del cliente</p>
+      </div>;
+    }
 
     return <ClientDashboard user={clientProfile} onLogout={handleLogout} />;
   }
 
-  // Admin, Coordinator, Professional
+  // Profesional
+  if (rol === 'PROFESIONAL') {
+    return <ProfessionalDashboard
+      currentUser={{ ...userSession.user, role: rol }}
+      onLogout={handleLogout}
+    />;
+  }
+
+  // Admin, Coordinator
   return <AdminDashboard currentUser={{ ...userSession.user, role: rol }} onLogout={handleLogout} />;
 }

@@ -72,6 +72,64 @@ export const authService = {
 };
 
 // ============================================================================
+// DASHBOARD - Perfil completo del cliente
+// ============================================================================
+export const dashboardService = {
+    /**
+     * Obtiene el perfil completo con progreso calculado
+     */
+    getClientProfile: async (userId: string) => {
+        const { data } = await api.get('/dashboard/me', {
+            params: { userId }
+        });
+        return data.profile;
+    },
+
+    /**
+     * Obtiene perfil de un usuario específico (para admin)
+     */
+    getUserProfile: async (userId: string) => {
+        const { data } = await api.get(`/dashboard/profile/${userId}`);
+        return data.profile;
+    }
+};
+
+// ============================================================================
+// PROFESSIONAL - Analítica de pacientes
+// ============================================================================
+export const professionalService = {
+    /**
+     * Obtiene lista de pacientes asignados
+     */
+    getPacientes: async (professionalId: string) => {
+        const { data } = await api.get('/professional/pacientes', {
+            params: { professionalId }
+        });
+        return data.pacientes;
+    },
+
+    /**
+     * Obtiene resumen de todos los pacientes
+     */
+    getResumenPacientes: async (professionalId: string) => {
+        const { data } = await api.get('/professional/pacientes/resumen', {
+            params: { professionalId }
+        });
+        return data.resumen;
+    },
+
+    /**
+     * Obtiene métricas detalladas de un paciente
+     */
+    getMetricasPaciente: async (pacienteId: string, matriculaId: string) => {
+        const { data } = await api.get(`/professional/paciente/${pacienteId}/metricas`, {
+            params: { matriculaId }
+        });
+        return data.metricas;
+    }
+};
+
+// ============================================================================
 // RECURSOS
 // ============================================================================
 export const recursosService = {
