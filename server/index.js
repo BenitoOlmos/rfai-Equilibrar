@@ -13,10 +13,13 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3005;
+const CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:3001';
+
+console.log('🌐 CORS configurado para:', CORS_ORIGIN);
 
 // Middleware
 app.use(cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3001',
+    origin: CORS_ORIGIN,
     credentials: true
 }));
 app.use(express.json());
