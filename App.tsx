@@ -124,33 +124,57 @@ const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin 
           <p className="text-center text-[10px] text-slate-400 mb-4 md:mb-6 uppercase font-bold tracking-widest">Accesos Demo - Programa Culpa</p>
 
           <div className="grid grid-cols-4 gap-2 mb-4 md:mb-6">
-            <button onClick={() => handleDemoLogin('lucia@client.com')} className="py-2 rounded-lg border border-slate-100 text-[10px] font-bold text-slate-600 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50 transition-all active:scale-95">
-              S1
+            <button
+              onClick={() => handleStaffPreload('lucia@client.com', 'demo123')}
+              className="py-2 px-1 rounded-lg border border-slate-100 text-[9px] font-bold text-slate-600 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50 transition-all active:scale-95"
+              type="button">
+              Lucía<br />S1
             </button>
-            <button onClick={() => handleDemoLogin('carlos@client.com')} className="py-2 rounded-lg border border-slate-100 text-[10px] font-bold text-slate-600 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50 transition-all active:scale-95">
-              S2
+            <button
+              onClick={() => handleStaffPreload('carlos@client.com', 'demo123')}
+              className="py-2 px-1 rounded-lg border border-slate-100 text-[9px] font-bold text-slate-600 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50 transition-all active:scale-95"
+              type="button">
+              Carlos<br />S2
             </button>
-            <button onClick={() => handleDemoLogin('pedro@client.com')} className="py-2 rounded-lg border border-slate-100 text-[10px] font-bold text-slate-600 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50 transition-all active:scale-95">
-              S3
+            <button
+              onClick={() => handleStaffPreload('pedro@client.com', 'demo123')}
+              className="py-2 px-1 rounded-lg border border-slate-100 text-[9px] font-bold text-slate-600 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50 transition-all active:scale-95"
+              type="button">
+              Pedro<br />S3
             </button>
-            <button onClick={() => handleDemoLogin('ana@client.com')} className="py-2 rounded-lg border border-slate-100 text-[10px] font-bold text-slate-600 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50 transition-all active:scale-95">
-              S4
+            <button
+              onClick={() => handleStaffPreload('ana@client.com', 'demo123')}
+              className="py-2 px-1 rounded-lg border border-slate-100 text-[9px] font-bold text-slate-600 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50 transition-all active:scale-95"
+              type="button">
+              Ana<br />S4
             </button>
           </div>
 
           <p className="text-center text-[10px] text-indigo-400 mb-4 md:mb-6 uppercase font-bold tracking-widest">Accesos Demo - Programa Angustia</p>
           <div className="grid grid-cols-4 gap-2 mb-6">
-            <button onClick={() => handleDemoLogin('paula@angustia.com')} className="py-2 rounded-lg border border-slate-100 text-[10px] font-bold text-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 transition-all active:scale-95">
-              S1
+            <button
+              onClick={() => handleStaffPreload('paula@angustia.com', 'demo123')}
+              className="py-2 px-1 rounded-lg border border-slate-100 text-[9px] font-bold text-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 transition-all active:scale-95"
+              type="button">
+              Paula<br />S1
             </button>
-            <button onClick={() => handleDemoLogin('jorge@angustia.com')} className="py-2 rounded-lg border border-slate-100 text-[10px] font-bold text-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 transition-all active:scale-95">
-              S2
+            <button
+              onClick={() => handleStaffPreload('jorge@angustia.com', 'demo123')}
+              className="py-2 px-1 rounded-lg border border-slate-100 text-[9px] font-bold text-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 transition-all active:scale-95"
+              type="button">
+              Jorge<br />S2
             </button>
-            <button onClick={() => handleDemoLogin('sofia@angustia.com')} className="py-2 rounded-lg border border-slate-100 text-[10px] font-bold text-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 transition-all active:scale-95">
-              S3
+            <button
+              onClick={() => handleStaffPreload('sofia@angustia.com', 'demo123')}
+              className="py-2 px-1 rounded-lg border border-slate-100 text-[9px] font-bold text-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 transition-all active:scale-95"
+              type="button">
+              Sofía<br />S3
             </button>
-            <button onClick={() => handleDemoLogin('miguel@angustia.com')} className="py-2 rounded-lg border border-slate-100 text-[10px] font-bold text-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 transition-all active:scale-95">
-              S4
+            <button
+              onClick={() => handleStaffPreload('miguel@angustia.com', 'demo123')}
+              className="py-2 px-1 rounded-lg border border-slate-100 text-[9px] font-bold text-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50 transition-all active:scale-95"
+              type="button">
+              Miguel<br />S4
             </button>
           </div>
 
