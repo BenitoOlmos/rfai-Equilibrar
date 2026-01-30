@@ -315,7 +315,6 @@ export default function App() {
       role: 'CLIENT',
       avatar: 'https://picsum.photos/200/200?random=1',
       status: 'ACTIVE',
-      phase: userSession.matricula?.dimension || 'ANGUSTIA',
       currentWeek: Math.min(Math.max(1, userSession.semanasDisponibles || 1), 4) as 1 | 2 | 3 | 4,
       startDate: userSession.matricula?.fechaInicio || new Date().toISOString(),
       nextSession: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
