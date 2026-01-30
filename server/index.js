@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 3005;
 
 // Middleware
 app.use(cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+    origin: process.env.CORS_ORIGIN || 'http://localhost:3001',
     credentials: true
 }));
 app.use(express.json());
@@ -59,10 +59,11 @@ app.get('/api/health', async (req, res) => {
 });
 
 // Dev routes (solo para desarrollo - REMOVER en producción)
-if (process.env.NODE_ENV === 'development') {
-    app.use('/api/dev', devRoutes);
-    console.log('⚠️  DEV ROUTES ACTIVADAS - No usar en producción');
-}
+// Activar siempre en desarrollo
+app.use('/api/dev', devRoutes);
+console.log('⚠️  DEV ROUTES ACTIVADAS - No usar en producción');
+console.log('   - POST /api/dev/login');
+console.log('   - GET  /api/dev/users');
 
 // Auth routes (básico - expandir según necesidad)
 app.post('/api/auth/login', async (req, res) => {
