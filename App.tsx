@@ -1,30 +1,53 @@
 import React, { useState } from 'react';
-import { User, ClientProfile } from './types';
-import { ALL_USERS } from './constants';
+import { ClientProfile } from './types';
 import { ClientDashboard } from './components/ClientDashboard';
 import { AdminDashboard } from './components/AdminDashboard';
 import { Eye, EyeOff, ArrowRight, HelpCircle, Moon } from 'lucide-react';
 import { BrandLogo } from './components/BrandLogo';
+import { authService } from './src/services/api';
 
-const LoginPage: React.FC<{ onLogin: (u: User) => void }> = ({ onLogin }) => {
+const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const user = ALL_USERS.find(u => u.email === email);
-    if (user) {
-      onLogin(user);
-    } else {
-      setError('Credenciales inválidas.');
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const response = await authService.login(email, password);
+      if (response.success) {
+        onLogin(response);
+      } else {
+        setError('Credenciales inválidas.');
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.mensaje || 'Error al conectar con el servidor');
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleDemoLogin = (demoEmail: string) => {
-    const user = ALL_USERS.find(u => u.email === demoEmail);
-    if (user) onLogin(user);
+  const handleDemoLogin = async (demoEmail: string) => {
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const response = await authService.login(demoEmail);
+      if (response.success) {
+        onLogin(response);
+      } else {
+        setError('Usuario no encontrado');
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.mensaje || 'Error al conectar con el servidor');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -74,9 +97,12 @@ const LoginPage: React.FC<{ onLogin: (u: User) => void }> = ({ onLogin }) => {
 
           {error && <p className="text-red-500 text-xs text-center font-medium bg-red-50 py-2 rounded-lg">{error}</p>}
 
-          <button type="submit" className="w-full py-4 mt-4 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white rounded-full font-bold shadow-lg shadow-brand-200 transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 group text-base">
-            Iniciar Sesión
-            <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full py-4 mt-4 bg-gradient-to-r from-brand-500 to-brand-600 hover:from-brand-600 hover:to-brand-700 text-white rounded-full font-bold shadow-lg shadow-brand-200 transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 group text-base disabled:opacity-50">
+            {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
+            {!isLoading && <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />}
           </button>
 
           <div className="text-center">
@@ -153,20 +179,73 @@ const LoginPage: React.FC<{ onLogin: (u: User) => void }> = ({ onLogin }) => {
 };
 
 export default function App() {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [userSession, setUserSession] = useState<any | null>(null);
 
   const handleLogout = () => {
-    setCurrentUser(null);
+    setUserSession(null);
+    localStorage.removeItem('rfai_session');
   };
 
-  if (!currentUser) {
-    return <LoginPage onLogin={setCurrentUser} />;
+  if (!userSession) {
+    return <LoginPage onLogin={(sessionData) => {
+      setUserSession(sessionData);
+      localStorage.setItem('rfai_session', JSON.stringify(sessionData));
+    }} />;
   }
 
-  if (currentUser.role === 'CLIENT') {
-    return <ClientDashboard user={currentUser as ClientProfile} onLogout={handleLogout} />;
+  const rol = userSession.user.rol;
+
+  if (rol === 'CLIENTE') {
+    // Convertir formato backend a formato que espera ClientDashboard
+    const clientProfile: ClientProfile = {
+      id: userSession.user.id,
+      name: userSession.user.nombre,
+      email: userSession.user.email,
+      role: 'CLIENT',
+      avatar: 'https://picsum.photos/200/200?random=1',
+      status: 'ACTIVE',
+      phase: userSession.matricula?.dimension || 'ANGUSTIA',
+      currentWeek: Math.min(Math.max(1, userSession.semanasDisponibles || 1), 4),
+      startDate: userSession.matricula?.fechaInicio || new Date().toISOString(),
+      nextSession: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+      program: userSession.matricula?.dimension || 'ANGUSTIA',
+      progress: {
+        week1: {
+          isLocked: false,
+          isCompleted: (userSession.semanasDisponibles || 0) > 1,
+          initialTestDone: (userSession.semanasDisponibles || 0) >= 1,
+          guideCompleted: false,
+          audioListened: 0,
+          meetingAttended: false
+        },
+        week2: {
+          isLocked: (userSession.semanasDisponibles || 0) < 2,
+          isCompleted: (userSession.semanasDisponibles || 0) > 2,
+          guideCompleted: false,
+          audioListened: 0
+        },
+        week3: {
+          isLocked: (userSession.semanasDisponibles || 0) < 3,
+          isCompleted: (userSession.semanasDisponibles || 0) > 3,
+          guideCompleted: false,
+          audioListened: 0
+        },
+        week4: {
+          isLocked: (userSession.semanasDisponibles || 0) < 4,
+          isCompleted: false,
+          guideCompleted: false,
+          audioListened: 0
+        }
+      },
+      clinicalData: {
+        testScores: [],
+        audioUsage: []
+      }
+    };
+
+    return <ClientDashboard user={clientProfile} onLogout={handleLogout} />;
   }
 
-  // Coordinator, Admin, Professional share the dashboard layout but permissions differ inside
-  return <AdminDashboard currentUser={currentUser} onLogout={handleLogout} />;
+  // Admin, Coordinator, Professional
+  return <AdminDashboard currentUser={{ ...userSession.user, role: rol }} onLogout={handleLogout} />;
 }

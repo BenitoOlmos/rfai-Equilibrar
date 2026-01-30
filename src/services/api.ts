@@ -41,7 +41,9 @@ api.interceptors.response.use(
 // ============================================================================
 export const authService = {
     login: async (email: string, password?: string) => {
-        const { data } = await api.post('/auth/login', { email, password });
+        // En desarrollo, usar el endpoint de dev que solo requiere email
+        const endpoint = import.meta.env.MODE === 'production' ? '/auth/login' : '/dev/login';
+        const { data } = await api.post(endpoint, { email, password });
         if (data.success && data.user) {
             localStorage.setItem('user', JSON.stringify(data.user));
         }
@@ -51,7 +53,8 @@ export const authService = {
     logout: () => {
         localStorage.removeItem('auth_token');
         localStorage.removeItem('user');
-        window.location.href = '/login';
+        localStorage.removeItem('rfai_session');
+        window.location.href = '/';
     },
 
     getCurrentUser: () => {
