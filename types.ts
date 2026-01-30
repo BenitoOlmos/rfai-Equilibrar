@@ -45,7 +45,7 @@ export interface TestResult {
     culpaNoAdaptativa?: number; // Scale 5-25
     responsabilidadConsciente?: number; // Scale 7-35
     humanizacionError?: number; // Scale 2-10
-    
+
     // Dimensiones RFAI Angustia (New from PDF)
     angustiaAnticipatoria?: number; // Rango 4-20
     autoculpabilizacionAngustia?: number; // Rango 5-25
@@ -70,4 +70,66 @@ export interface GuideStep {
   title: string;
   description: string;
   questions: Question[];
+}
+
+// ============================================================================
+// NEW TYPES - Cycle-Based System (v2.0)
+// ============================================================================
+
+export interface CicloTratamiento {
+  id: number;
+  clientId: string;
+  dimension: 'ANGUSTIA' | 'CULPA';
+  fechaInicio: Date;
+  fechaCierre?: Date;
+  estado: 'ACTIVO' | 'COMPLETADO' | 'CANCELADO';
+  profesionalId?: string;
+  notasCiclo?: string;
+  sesionesCompletadas?: number;
+  citas?: Cita[];
+  materiales?: MaterialConAcceso[];
+}
+
+export interface Cita {
+  id: number;
+  cicloId: number;
+  numeroSesion: '1' | '2';
+  fechaProgramada: Date;
+  fechaRealizada?: Date;
+  estado: 'PROGRAMADA' | 'REALIZADO' | 'CANCELADA';
+  notasSesion?: string;
+}
+
+export interface Material {
+  id: number;
+  tipo: 'TEST_INICIAL' | 'AUDIO' | 'TEST_INTERMEDIO' | 'GUIA_MANTENIMIENTO';
+  dimension: 'ANGUSTIA' | 'CULPA' | 'AMBOS';
+  titulo: string;
+  descripcion?: string;
+  urlRecurso?: string;
+  duracionMinutos?: number;
+  prerequisito: 'NINGUNO' | 'SESION_1' | 'SESION_2';
+  ordenVisualizacion: number;
+  activo: boolean;
+}
+
+export interface MaterialConAcceso extends Material {
+  desbloqueadoEn?: Date;
+  completadoEn?: Date;
+  progresoPorcentaje?: number;
+  desbloqueado: boolean;
+}
+
+export interface ProgressState {
+  sesion1: {
+    completada: boolean;
+    fecha?: Date;
+  };
+  sesion2: {
+    completada: boolean;
+    fecha?: Date;
+  };
+  materialesDisponibles: number;
+  materialesCompletados: number;
+  cicloCompletado: boolean;
 }

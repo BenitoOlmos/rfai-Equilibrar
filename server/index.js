@@ -3,14 +3,19 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { pool } from './db.js';
+import ciclosRoutes from './routes/ciclosRoutes.js';
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3005;
 
 app.use(cors());
 app.use(express.json());
+
+// Routes
+app.use('/api/ciclos', ciclosRoutes);
+app.use('/api/citas', ciclosRoutes); // Reuse for citas endpoints
 
 // Auth Routes
 app.post('/api/auth/login', async (req, res) => {
