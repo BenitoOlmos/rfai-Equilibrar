@@ -7,7 +7,7 @@ export interface User {
   email: string;
   role: Role;
   avatar: string;
-  status: 'ACTIVE' | 'INACTIVE';
+  status: 'ACTIVE' | 'INACTIVE' | 'PAUSADO' | 'SUSPENDIDO';
 }
 
 export interface ClientProfile extends User {

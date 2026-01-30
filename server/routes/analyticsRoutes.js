@@ -274,4 +274,43 @@ router.post('/acceso', async (req, res) => {
     }
 });
 
+
+/**
+ * GET /api/analytics/admin/activity
+ * Obtener logs de actividad reciente para el dashboard administrativo
+ */
+router.get('/admin/activity', async (req, res) => {
+    try {
+        const limit = parseInt(req.query.limit) || 20;
+
+        const [logs] = await pool.query(`
+            SELECT 
+                la.id,
+                la.usuario_id,
+                u.nombre_completo as usuario,
+                u.email,
+                la.ruta,
+                la.metodo,
+                la.timestamp,
+                r.nombre as rol
+            FROM logs_acceso la
+            LEFT JOIN usuarios u ON la.usuario_id = u.id
+            LEFT JOIN usuario_roles ur ON u.id = ur.usuario_id
+            LEFT JOIN roles r ON ur.rol_id = r.id
+            WHERE u.id IS NOT NULL
+            ORDER BY la.timestamp DESC
+            LIMIT ?
+        `, [limit]);
+
+        res.json({
+            success: true,
+            activity: logs
+        });
+
+    } catch (error) {
+        console.error('Error al obtener actividad reciente:', error);
+        res.status(500).json({ error: 'Error al cargar log de actividad' });
+    }
+});
+
 export default router;

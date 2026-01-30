@@ -42,6 +42,31 @@ export const ClientDashboard: React.FC<Props> = ({ user, onLogout }) => {
     return dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
   };
 
+  // VERIFICACIÓN DE ESTADO: PAUSADO
+  if (user.status === 'PAUSADO' || user.status === 'SUSPENDIDO') {
+    return (
+      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
+        <div className="bg-white max-w-md w-full p-8 rounded-3xl shadow-xl text-center">
+          <div className="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Pause size={32} />
+          </div>
+          <h2 className="text-2xl font-bold text-slate-800 mb-2">Programa Pausado</h2>
+          <p className="text-slate-600 mb-6">
+            Tu acceso al programa se encuentra temporalmente en pausa.
+            Para reactivar tu cuenta, por favor contacta a tu coordinador.
+          </p>
+          <button
+            onClick={onLogout}
+            className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-colors"
+          >
+            <LogOut size={18} />
+            Cerrar Sesión
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-800">
       <nav className="bg-white/80 backdrop-blur-md sticky top-0 z-30 border-b border-slate-100">

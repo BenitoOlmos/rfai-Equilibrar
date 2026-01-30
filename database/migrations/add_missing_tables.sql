@@ -186,12 +186,12 @@ COMMENT='Configuraciones del sistema centralizadas';
 -- 7. CORRECCIONES A TABLAS EXISTENTES
 -- ============================================================================
 
--- Agregar columna 'semana' a recursos (calculada desde modulo_id)
+-- Agregar columna 'semana' a recursos (Normal, no generada)
 ALTER TABLE `recursos` 
-ADD COLUMN `semana` INT GENERATED ALWAYS AS (
-  (SELECT numero_semana FROM modulos_semanales WHERE id = modulo_id)
-) VIRTUAL
-COMMENT 'Semana asociada (calculada desde módulo)';
+ADD COLUMN `semana` INT DEFAULT NULL COMMENT 'Semana asociada (desnormalizado para performance)';
+
+-- Actualizar semana basado en modulo_id (Opcional, requiere ejecutar despues)
+-- UPDATE recursos r JOIN modulos_semanales m ON r.modulo_id = m.id SET r.semana = m.numero_semana;
 
 -- Agregar columna 'pasos_totales' a guia_progreso
 ALTER TABLE `guia_progreso`

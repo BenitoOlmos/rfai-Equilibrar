@@ -4,6 +4,7 @@ import { ALL_USERS, MOCK_CLIENT_W1 } from '../constants';
 import { Users, Activity, Calendar as CalendarIcon, Settings, ChevronRight, ChevronLeft, LogOut, Search, UserPlus, Video, Clock, FileText, Headphones, TrendingUp, AlertCircle, CheckCircle2, ChevronDown, MapPin, MoreVertical, Phone, ArrowLeft, ArrowRight, Sun, Moon, ToggleLeft, ToggleRight, Plus, X, Mail, Briefcase, Lock, Database, Server, HardDrive, Shield, Save, Edit, Menu, RefreshCw, CreditCard, File, Link as LinkIcon, Trash2, Mic, CheckSquare, Power, Upload, Image as ImageIcon, Filter } from 'lucide-react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, AreaChart, Area, BarChart, Bar, Cell } from 'recharts';
 import { BrandLogo } from './BrandLogo';
+import { AdminActivityLog } from './AdminActivityLog';
 
 interface Props {
     currentUser: User;
