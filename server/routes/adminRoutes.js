@@ -4,8 +4,29 @@ import { verifyRole } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// Middleware global para estas rutas: Solo Admin y Coordinador
+// Middleware global: Solo Admin y Coordinador
 router.use(verifyRole(['ADMIN', 'COORDINADOR']));
+
+// Helper para auditoría (usa connection si se provee, sino pool)
+const logAudit = async (conn, adminId, accion, entidad, registroId, detalles) => {
+    try {
+        const query = `
+            INSERT INTO auditoria_admin 
+            (admin_id, accion, entidad_afectada, registro_id, detalles)
+            VALUES (?, ?, ?, ?, ?)
+        `;
+        const params = [adminId, accion, entidad, registroId, JSON.stringify(detalles)];
+
+        if (conn && conn.query) {
+            await conn.query(query, params);
+        } else {
+            await pool.query(query, params);
+        }
+    } catch (error) {
+        console.error('Error al registrar auditoría:', error);
+        // No fallamos la operación principal por error de auditoría, solo logueamos
+    }
+};
 
 /**
  * POST /api/admin/usuarios
@@ -17,6 +38,7 @@ router.post('/usuarios', async (req, res) => {
         await connection.beginTransaction();
 
         const { id, nombre, email, rol, programaId } = req.body;
+        const adminId = req.currentUser.id;
 
         // 1. Crear Usuario
         await connection.query(`
@@ -25,22 +47,28 @@ router.post('/usuarios', async (req, res) => {
         `, [id, nombre, email]);
 
         // 2. Asignar Rol
-        // Buscar ID del rol
         const [roles] = await connection.query('SELECT id FROM roles WHERE nombre = ?', [rol]);
         if (roles.length === 0) throw new Error('Rol no válido');
 
         await connection.query(`
             INSERT INTO usuario_roles (usuario_id, rol_id, asignado_por)
             VALUES (?, ?, ?)
-        `, [id, roles[0].id, req.currentUser.id]);
+        `, [id, roles[0].id, adminId]);
 
         // 3. Si es cliente, crear matrícula
+        let matriculaId = null;
         if (rol === 'CLIENTE' && programaId) {
-            await connection.query(`
+            const [matResult] = await connection.query(`
                 INSERT INTO matriculas (cliente_id, programa_id, fecha_inicio, estado)
                 VALUES (?, ?, CURDATE(), 'ACTIVO')
             `, [id, programaId]);
+            matriculaId = matResult.insertId;
         }
+
+        // 4. Auditoría
+        await logAudit(connection, adminId, 'CREACION_USUARIO', 'usuarios', id, {
+            nombre, email, rol, matriculaId
+        });
 
         await connection.commit();
         res.json({ success: true, message: 'Usuario creado exitosamente' });
@@ -56,7 +84,6 @@ router.post('/usuarios', async (req, res) => {
 
 /**
  * GET /api/admin/usuarios
- * Listar todos los usuarios
  */
 router.get('/usuarios', async (req, res) => {
     try {
@@ -80,13 +107,13 @@ router.get('/usuarios', async (req, res) => {
             ORDER BY u.created_at DESC
         `);
 
-        // Normalizar datos para que coincidan con types.ts
+        // Normalizar datos para types.ts
         const normalizedUsers = usuarios.map(u => ({
             id: u.id,
             name: u.name,
             email: u.email,
             role: u.role === 'PROFESIONAL' ? 'PROFESSIONAL' : u.role === 'CLIENTE' ? 'CLIENT' : 'ADMIN',
-            avatar: u.avatar || 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + u.id,
+            avatar: u.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.id}`,
             status: u.status,
             program: u.program ? (u.program.includes('Angustia') ? 'ANGUSTIA' : 'CULPA') : undefined,
             currentWeek: Math.max(1, u.currentWeek || 1),
@@ -101,8 +128,7 @@ router.get('/usuarios', async (req, res) => {
 });
 
 /**
- * GET /api/admin/pacientes-sin-asignar
- * Obtener lista de matrículas activas sin profesional
+ * GET - Helpers para UI
  */
 router.get('/pacientes-sin-asignar', async (req, res) => {
     try {
@@ -119,10 +145,6 @@ router.get('/pacientes-sin-asignar', async (req, res) => {
     }
 });
 
-/**
- * GET /api/admin/profesionales
- * Obtener lista de profesionales activos para dropdown
- */
 router.get('/profesionales', async (req, res) => {
     try {
         const [profesionales] = await pool.query(`
@@ -140,17 +162,22 @@ router.get('/profesionales', async (req, res) => {
 
 /**
  * POST /api/admin/vincular
- * Asignar profesional a matrícula
  */
 router.post('/vincular', async (req, res) => {
     try {
         const { matriculaId, profesionalId } = req.body;
+        const adminId = req.currentUser.id;
 
         await pool.query(`
             UPDATE matriculas 
             SET profesional_id = ?
             WHERE id = ?
         `, [profesionalId, matriculaId]);
+
+        // Auditoría
+        await logAudit(pool, adminId, 'VINCULACION_PROF', 'matriculas', matriculaId.toString(), {
+            profesionalId
+        });
 
         res.json({ success: true, message: 'Vinculación exitosa' });
 
@@ -162,33 +189,58 @@ router.post('/vincular', async (req, res) => {
 
 /**
  * PATCH /api/admin/usuarios/:id
- * Editar usuario (activar/desactivar/editar)
  */
 router.patch('/usuarios/:id', async (req, res) => {
+    const connection = await pool.getConnection();
     try {
+        await connection.beginTransaction();
+
         const { id } = req.params;
         const { estado, nombre, email } = req.body;
+        const adminId = req.currentUser.id;
 
         let query = 'UPDATE usuarios SET ';
         const params = [];
         const updates = [];
+        const auditDetails = {};
 
-        if (estado) { updates.push('estado = ?'); params.push(estado); }
-        if (nombre) { updates.push('nombre_completo = ?'); params.push(nombre); }
-        if (email) { updates.push('email = ?'); params.push(email); }
+        if (estado) {
+            updates.push('estado = ?');
+            params.push(estado);
+            auditDetails.nuevo_estado = estado;
+        }
+        if (nombre) {
+            updates.push('nombre_completo = ?');
+            params.push(nombre);
+            auditDetails.nuevo_nombre = nombre;
+        }
+        if (email) {
+            updates.push('email = ?');
+            params.push(email);
+            auditDetails.nuevo_email = email;
+        }
 
-        if (updates.length === 0) return res.status(400).json({ error: 'Nada que actualizar' });
+        if (updates.length > 0) {
+            query += updates.join(', ') + ' WHERE id = ?';
+            params.push(id);
+            await connection.query(query, params);
 
-        query += updates.join(', ') + ' WHERE id = ?';
-        params.push(id);
+            // Determinar tipo de acción para auditoría
+            let accionAudit = 'EDICION_USUARIO';
+            if (estado && updates.length === 1) accionAudit = 'CAMBIO_ESTADO';
 
-        await pool.query(query, params);
+            await logAudit(connection, adminId, accionAudit, 'usuarios', id, auditDetails);
+        }
 
+        await connection.commit();
         res.json({ success: true, message: 'Usuario actualizado' });
 
     } catch (error) {
+        await connection.rollback();
         console.error(error);
         res.status(500).json({ error: 'Error al actualizar usuario' });
+    } finally {
+        connection.release();
     }
 });
 

@@ -11,6 +11,7 @@ import devRoutes from './routes/devRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
 import professionalRoutes from './routes/professionalRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import adminContentRouter from './routes/contentRoutes.js';
 
 dotenv.config();
 
@@ -117,6 +118,7 @@ app.use('/api/recursos', recursosRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/professional', professionalRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/admin/content', adminContentRouter);
 
 // Servir página de prueba
 import { fileURLToPath } from 'url';

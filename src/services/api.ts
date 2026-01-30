@@ -193,6 +193,29 @@ export const adminService = {
     updateUsuario: async (id: string, updates: any) => {
         const { data } = await api.patch(`/admin/usuarios/${id}`, updates);
         return data;
+    },
+
+    /**
+     * Gestión de Contenido (Biblioteca)
+     */
+    getRecursos: async () => {
+        const { data } = await api.get('/admin/content/recursos');
+        return data.resources;
+    },
+
+    getModulos: async () => {
+        const { data } = await api.get('/admin/content/modulos');
+        return data.modulos;
+    },
+
+    createRecurso: async (recursoData: any) => {
+        const { data } = await api.post('/admin/content/recursos', recursoData);
+        return data;
+    },
+
+    updateRecurso: async (id: number, updates: any) => {
+        const { data } = await api.patch(`/admin/content/recursos/${id}`, updates);
+        return data;
     }
 };
 

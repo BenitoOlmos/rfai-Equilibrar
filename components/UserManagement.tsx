@@ -19,6 +19,7 @@ export const UserManagement: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [filterRole, setFilterRole] = useState<'ALL' | 'CLIENT' | 'PROFESSIONAL'>('ALL');
+    const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
     // Edit Modal State
     const [editingUser, setEditingUser] = useState<AdminUser | null>(null);
@@ -31,12 +32,18 @@ export const UserManagement: React.FC = () => {
         nombre: '',
         email: '',
         rol: 'CLIENTE',
-        programaId: 1
+        programaId: 1,
+        estado: 'ACTIVO'
     });
 
     useEffect(() => {
         loadUsers();
     }, []);
+
+    const showMessage = (type: 'success' | 'error', text: string) => {
+        setMessage({ type, text });
+        setTimeout(() => setMessage(null), 3000);
+    };
 
     const loadUsers = async () => {
         setLoading(true);
@@ -54,17 +61,32 @@ export const UserManagement: React.FC = () => {
         try {
             if (isCreating) {
                 await adminService.crearUsuario(formData);
+                showMessage('success', 'Usuario creado exitosamente');
             } else if (editingUser) {
                 await adminService.updateUsuario(editingUser.id, {
                     nombre: formData.nombre,
                     email: formData.email,
-                    estado: formData.id // guardando estado en id temporalmente para reusar state
+                    estado: formData.estado,
                 });
+                showMessage('success', 'Usuario actualizado correctamente');
             }
             setShowModal(false);
             loadUsers();
         } catch (error) {
-            alert('Error al guardar: ' + error);
+            showMessage('error', 'Error al guardar los cambios');
+        }
+    };
+
+    const toggleStatus = async (user: AdminUser) => {
+        const newStatus = user.status === 'ACTIVO' ? 'INACTIVO' : 'ACTIVO';
+        if (!confirm(`¿Cambiar estado de ${user.name} a ${newStatus}?`)) return;
+
+        try {
+            await adminService.updateUsuario(user.id, { estado: newStatus });
+            showMessage('success', `Usuario ${newStatus.toLowerCase()} correctamente`);
+            loadUsers(); // Refresh
+        } catch (error) {
+            showMessage('error', 'Error al cambiar estado');
         }
     };
 
@@ -72,11 +94,12 @@ export const UserManagement: React.FC = () => {
         setEditingUser(user);
         setIsCreating(false);
         setFormData({
-            id: user.status as any, // Hack: reusing field
+            id: user.id,
             nombre: user.name,
             email: user.email,
             rol: user.role,
-            programaId: 1
+            programaId: 1,
+            estado: user.status
         });
         setShowModal(true);
     };
@@ -85,11 +108,12 @@ export const UserManagement: React.FC = () => {
         setEditingUser(null);
         setIsCreating(true);
         setFormData({
-            id: `u-${Date.now()}`, // Auto ID simple
+            id: `u-${Date.now()}`,
             nombre: '',
             email: '',
             rol: 'CLIENTE',
-            programaId: 1
+            programaId: 1,
+            estado: 'ACTIVO'
         });
         setShowModal(true);
     };
@@ -130,7 +154,12 @@ export const UserManagement: React.FC = () => {
             </div>
 
             {/* Filters */}
-            <div className="p-4 border-b border-slate-100 bg-white flex gap-3">
+            <div className="p-4 border-b border-slate-100 bg-white flex gap-3 relative">
+                {message && (
+                    <div className={`absolute top-0 left-0 right-0 z-10 p-2 text-center text-xs font-bold animate-in slide-in-from-top duration-300 ${message.type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>
+                        {message.text}
+                    </div>
+                )}
                 <div className="relative flex-1">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                     <input
@@ -171,28 +200,41 @@ export const UserManagement: React.FC = () => {
                                         <p className="text-xs text-slate-500">{user.email}</p>
                                         <div className="flex gap-2 mt-1">
                                             <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${user.role === 'ADMIN' ? 'bg-purple-100 text-purple-700' :
-                                                    user.role === 'PROFESSIONAL' ? 'bg-blue-100 text-blue-700' :
-                                                        'bg-emerald-100 text-emerald-700'
+                                                user.role === 'PROFESSIONAL' ? 'bg-blue-100 text-blue-700' :
+                                                    'bg-emerald-100 text-emerald-700'
                                                 }`}>{user.role}</span>
                                             {user.program && (
                                                 <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 text-slate-600 font-medium">
                                                     {user.program}
                                                 </span>
                                             )}
+                                            <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold ${user.status === 'ACTIVO' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+                                                {user.status === 'ACTIVO' ? 'Activo' : 'Inactivo'}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="flex flex-col gap-2">
-                                    <button
-                                        onClick={() => openEdit(user)}
-                                        className="p-2 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-brand-600 transition-colors"
-                                    >
-                                        <Edit size={16} />
-                                    </button>
+                                    <div className="flex gap-1">
+                                        <button
+                                            onClick={() => openEdit(user)}
+                                            className="p-2 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-brand-600 transition-colors"
+                                            title="Editar"
+                                        >
+                                            <Edit size={16} />
+                                        </button>
+                                        <button
+                                            onClick={() => toggleStatus(user)}
+                                            className={`p-2 rounded-lg transition-colors ${user.status === 'ACTIVO' ? 'text-green-600 hover:bg-red-50 hover:text-red-500' : 'text-slate-400 hover:bg-green-50 hover:text-green-600'}`}
+                                            title={user.status === 'ACTIVO' ? 'Desactivar' : 'Activar'}
+                                        >
+                                            <Power size={16} />
+                                        </button>
+                                    </div>
 
                                     {/* Action: Link to Claudio if orphan */}
-                                    {user.role === 'CLIENT' && user.matriculaId && !user.program /* Using program existence as proxy for assigned? No, need specific flag. Assuming backend returns null professional if unassigned */ && (
+                                    {user.role === 'CLIENT' && user.matriculaId && !user.program /* Only show if looks unassigned or special case? Actually unassigned logic needs checking backend response. */ && (
                                         <button
                                             onClick={() => handleAssignClaudio(user.matriculaId!)}
                                             className="text-[10px] bg-brand-50 text-brand-600 px-2 py-1 rounded font-bold hover:bg-brand-100"
@@ -225,8 +267,8 @@ export const UserManagement: React.FC = () => {
                                 <div className="p-3 bg-slate-50 rounded-xl flex justify-between items-center mb-4">
                                     <span className="text-sm font-medium text-slate-600">Estado</span>
                                     <select
-                                        value={formData.id} // Hack: estado stored in id
-                                        onChange={(e) => setFormData({ ...formData, id: e.target.value })}
+                                        value={formData.estado} // Corrected
+                                        onChange={(e) => setFormData({ ...formData, estado: e.target.value })}
                                         className="bg-white border text-sm rounded-lg p-1.5 focus:ring-brand-500"
                                     >
                                         <option value="ACTIVO">Activo</option>

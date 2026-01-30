@@ -8,6 +8,7 @@ import { AdminActivityLog } from './AdminActivityLog';
 import { adminService } from '../src/services/api';
 import { UserAssignment } from './UserAssignment';
 import { UserManagement } from './UserManagement';
+import { ContentManager } from './ContentManager';
 
 interface Props {
     currentUser: User;
@@ -54,7 +55,7 @@ interface ContentItem {
     details: string; // duration, items, etc.
 }
 
-const ContentManager: React.FC = () => {
+const _InternalContentManager: React.FC = () => {
     const [activeType, setActiveType] = useState<'AUDIO' | 'GUIDE' | 'TEST' | 'DOC'>('AUDIO');
     const [showUploadModal, setShowUploadModal] = useState(false);
 

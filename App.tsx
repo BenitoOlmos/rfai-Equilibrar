@@ -59,6 +59,23 @@ const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin 
     setError('');
   };
 
+  const handleQuickLogin = async (quickEmail: string, quickPassword: string) => {
+    setIsLoading(true);
+    setError('');
+    try {
+      const response = await authService.login(quickEmail, quickPassword);
+      if (response.success) {
+        onLogin(response);
+      } else {
+        setError('Inicio rápido falló: Credenciales inválidas');
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.mensaje || 'Error al conectar con el servidor');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
     if (!darkMode) {
@@ -244,19 +261,22 @@ const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin 
               Coordinador
             </button>
             <button
-              onClick={() => handleStaffPreload('profesional@test.cl', 'cr1234')}
+              onClick={() => handleQuickLogin('claudio@prof.com', 'password123')}
               className={`py-3 px-2 rounded-xl text-[10px] font-bold transition-all uppercase tracking-wide active:scale-95 ${darkMode
-                ? 'bg-slate-700 text-slate-300 hover:bg-slate-600'
-                : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
+                ? 'bg-brand-900/30 text-brand-400 border border-brand-500/30 hover:bg-brand-900/50'
+                : 'bg-brand-50 text-brand-700 border border-brand-200 hover:bg-brand-100'
                 }`}
               type="button">
-              Profesional
+              Dr. Claudio
             </button>
             <button
-              onClick={() => handleStaffPreload('admin@test.cl', 'bo1234')}
-              className="py-3 px-2 rounded-xl bg-slate-900 text-white text-[10px] font-bold hover:bg-slate-800 transition-all uppercase tracking-wide active:scale-95"
+              onClick={() => handleQuickLogin('admin@admin.com', 'admin123')}
+              className={`py-3 px-2 rounded-xl text-[10px] font-bold transition-all uppercase tracking-wide active:scale-95 ${darkMode
+                ? 'bg-purple-900/30 text-purple-400 border border-purple-500/30 hover:bg-purple-900/50'
+                : 'bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100'
+                }`}
               type="button">
-              Admin
+              Admin General
             </button>
           </div>
         </div>
