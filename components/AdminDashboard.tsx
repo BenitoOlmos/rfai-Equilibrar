@@ -5,6 +5,9 @@ import { Users, Activity, Calendar as CalendarIcon, Settings, ChevronRight, Chev
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, AreaChart, Area, BarChart, Bar, Cell } from 'recharts';
 import { BrandLogo } from './BrandLogo';
 import { AdminActivityLog } from './AdminActivityLog';
+import { adminService } from '../src/services/api';
+import { UserAssignment } from './UserAssignment';
+import { UserManagement } from './UserManagement';
 
 interface Props {
     currentUser: User;
@@ -879,7 +882,7 @@ const AdminView: React.FC<{ currentUser: User; onLogout: () => void }> = ({ curr
 
             <main className="flex-1 relative bg-slate-50 overflow-hidden flex flex-col">
                 {activeTab === 'global' && <div className="h-full overflow-y-auto p-4 md:p-8 pb-24"><AdminGlobalPanel /></div>}
-                {activeTab === 'users' && <AdminUserManagement currentUserRole="ADMIN" onSelectUser={(u) => console.log('Selected user:', u)} />}
+                {activeTab === 'users' && <UserManagement />}
                 {activeTab === 'content' && <ContentManager />}
                 {activeTab === 'settings' && <AdminSettings />}
             </main>
@@ -949,7 +952,7 @@ const CoordinatorView: React.FC<{ currentUser: User; onLogout: () => void }> = (
             ) : (
                 <main className="flex-1 relative bg-slate-50 overflow-hidden flex flex-col">
                     {activeTab === 'calendar' && <div className="h-full overflow-y-auto pb-20 md:pb-0"><ProCalendarModule onSelectClient={(c) => { setSelectedClient(c); setActiveTab('clients'); }} /></div>}
-                    {activeTab === 'users' && <AdminUserManagement currentUserRole="COORDINATOR" onSelectUser={(u) => console.log(u)} />}
+                    {activeTab === 'users' && <UserManagement />}
                     {activeTab === 'content' && <ContentManager />}
                 </main>
             )}

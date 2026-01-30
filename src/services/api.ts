@@ -20,6 +20,20 @@ api.interceptors.request.use(
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
+
+        // Inyectar ID de usuario para middleware de roles (Prototipo)
+        const sessionStr = localStorage.getItem('rfai_session');
+        if (sessionStr) {
+            try {
+                const session = JSON.parse(sessionStr);
+                if (session.user?.id) {
+                    config.headers['x-user-id'] = session.user.id;
+                }
+            } catch (e) {
+                console.error('Error parsing session for header', e);
+            }
+        }
+
         return config;
     },
     (error) => Promise.reject(error)
@@ -126,6 +140,59 @@ export const professionalService = {
             params: { matriculaId }
         });
         return data.metricas;
+    }
+};
+
+// ============================================================================
+// ADMIN - Gestión Administrativa
+// ============================================================================
+export const adminService = {
+    /**
+     * Obtener pacientes sin asignar
+     */
+    getPacientesSinAsignar: async () => {
+        const { data } = await api.get('/admin/pacientes-sin-asignar');
+        return data.pacientes;
+    },
+
+    /**
+     * Obtener todos los usuarios
+     */
+    getUsers: async () => {
+        const { data } = await api.get('/admin/usuarios');
+        return data.users;
+    },
+
+    /**
+     * Obtener lista de profesionales
+     */
+    getProfesionales: async () => {
+        const { data } = await api.get('/admin/profesionales');
+        return data.profesionales;
+    },
+
+    /**
+     * Vincular profesional a paciente
+     */
+    vincularProfesional: async (matriculaId: number, profesionalId: string) => {
+        const { data } = await api.post('/admin/vincular', { matriculaId, profesionalId });
+        return data;
+    },
+
+    /**
+     * Crear usuario
+     */
+    crearUsuario: async (userData: any) => {
+        const { data } = await api.post('/admin/usuarios', userData);
+        return data;
+    },
+
+    /**
+     * Actualizar usuario
+     */
+    updateUsuario: async (id: string, updates: any) => {
+        const { data } = await api.patch(`/admin/usuarios/${id}`, updates);
+        return data;
     }
 };
 
