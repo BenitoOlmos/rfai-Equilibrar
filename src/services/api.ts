@@ -43,7 +43,13 @@ export const authService = {
     login: async (email: string, password?: string) => {
         // En desarrollo, usar el endpoint de dev que solo requiere email
         const endpoint = import.meta.env.MODE === 'production' ? '/auth/login' : '/dev/login';
-        const { data } = await api.post(endpoint, { email, password });
+
+        // En desarrollo, solo enviar email
+        const payload = import.meta.env.MODE === 'production'
+            ? { email, password }
+            : { email };
+
+        const { data } = await api.post(endpoint, payload);
         if (data.success && data.user) {
             localStorage.setItem('user', JSON.stringify(data.user));
         }
