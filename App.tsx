@@ -100,8 +100,8 @@ const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin 
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className={`w-full px-6 py-4 rounded-full border focus:border-brand-500 focus:ring-1 focus:ring-brand-200 outline-none transition-all font-medium text-base ${darkMode
-                  ? 'bg-slate-700 border-slate-600 text-white placeholder:text-slate-400'
-                  : 'bg-slate-50/50 border-slate-100 text-slate-600 placeholder:text-slate-300'
+                ? 'bg-slate-700 border-slate-600 text-white placeholder:text-slate-400'
+                : 'bg-slate-50/50 border-slate-100 text-slate-600 placeholder:text-slate-300'
                 }`}
               placeholder="ejemplo@clinica.com"
             />
@@ -116,8 +116,8 @@ const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className={`w-full px-6 py-4 rounded-full border focus:border-brand-500 focus:ring-1 focus:ring-brand-200 outline-none transition-all font-medium tracking-widest text-base ${darkMode
-                    ? 'bg-slate-700 border-slate-600 text-white placeholder:text-slate-400'
-                    : 'bg-slate-50/50 border-slate-100 text-slate-600 placeholder:text-slate-300'
+                  ? 'bg-slate-700 border-slate-600 text-white placeholder:text-slate-400'
+                  : 'bg-slate-50/50 border-slate-100 text-slate-600 placeholder:text-slate-300'
                   }`}
                 placeholder="••••••••"
               />
@@ -156,8 +156,8 @@ const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin 
             <button
               onClick={() => handleStaffPreload('lucia@client.com', 'demo123')}
               className={`py-2 px-1 rounded-lg border text-[9px] font-bold transition-all active:scale-95 ${darkMode
-                  ? 'border-slate-600 text-slate-300 hover:border-brand-500 hover:text-brand-500 hover:bg-slate-700'
-                  : 'border-slate-100 text-slate-600 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50'
+                ? 'border-slate-600 text-slate-300 hover:border-brand-500 hover:text-brand-500 hover:bg-slate-700'
+                : 'border-slate-100 text-slate-600 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50'
                 }`}
               type="button">
               Lucía<br />S1
@@ -165,8 +165,8 @@ const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin 
             <button
               onClick={() => handleStaffPreload('carlos@client.com', 'demo123')}
               className={`py-2 px-1 rounded-lg border text-[9px] font-bold transition-all active:scale-95 ${darkMode
-                  ? 'border-slate-600 text-slate-300 hover:border-brand-500 hover:text-brand-500 hover:bg-slate-700'
-                  : 'border-slate-100 text-slate-600 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50'
+                ? 'border-slate-600 text-slate-300 hover:border-brand-500 hover:text-brand-500 hover:bg-slate-700'
+                : 'border-slate-100 text-slate-600 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50'
                 }`}
               type="button">
               Carlos<br />S2
@@ -174,8 +174,8 @@ const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin 
             <button
               onClick={() => handleStaffPreload('pedro@client.com', 'demo123')}
               className={`py-2 px-1 rounded-lg border text-[9px] font-bold transition-all active:scale-95 ${darkMode
-                  ? 'border-slate-600 text-slate-300 hover:border-brand-500 hover:text-brand-500 hover:bg-slate-700'
-                  : 'border-slate-100 text-slate-600 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50'
+                ? 'border-slate-600 text-slate-300 hover:border-brand-500 hover:text-brand-500 hover:bg-slate-700'
+                : 'border-slate-100 text-slate-600 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50'
                 }`}
               type="button">
               Pedro<br />S3
@@ -183,8 +183,8 @@ const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin 
             <button
               onClick={() => handleStaffPreload('ana@client.com', 'demo123')}
               className={`py-2 px-1 rounded-lg border text-[9px] font-bold transition-all active:scale-95 ${darkMode
-                  ? 'border-slate-600 text-slate-300 hover:border-brand-500 hover:text-brand-500 hover:bg-slate-700'
-                  : 'border-slate-100 text-slate-600 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50'
+                ? 'border-slate-600 text-slate-300 hover:border-brand-500 hover:text-brand-500 hover:bg-slate-700'
+                : 'border-slate-100 text-slate-600 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50'
                 }`}
               type="button">
               Ana<br />S4
@@ -197,8 +197,8 @@ const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin 
             <button
               onClick={() => handleStaffPreload('paula@angustia.com', 'demo123')}
               className={`py-2 px-1 rounded-lg border text-[9px] font-bold transition-all active:scale-95 ${darkMode
-                  ? 'border-slate-600 text-slate-300 hover:border-indigo-500 hover:text-indigo-400 hover:bg-slate-700'
-                  : 'border-slate-100 text-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50'
+                ? 'border-slate-600 text-slate-300 hover:border-indigo-500 hover:text-indigo-400 hover:bg-slate-700'
+                : 'border-slate-100 text-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50'
                 }`}
               type="button">
               Paula<br />S1
@@ -206,8 +206,8 @@ const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin 
             <button
               onClick={() => handleStaffPreload('jorge@angustia.com', 'demo123')}
               className={`py-2 px-1 rounded-lg border text-[9px] font-bold transition-all active:scale-95 ${darkMode
-                  ? 'border-slate-600 text-slate-300 hover:border-indigo-500 hover:text-indigo-400 hover:bg-slate-700'
-                  : 'border-slate-100 text-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50'
+                ? 'border-slate-600 text-slate-300 hover:border-indigo-500 hover:text-indigo-400 hover:bg-slate-700'
+                : 'border-slate-100 text-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50'
                 }`}
               type="button">
               Jorge<br />S2
@@ -215,8 +215,8 @@ const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin 
             <button
               onClick={() => handleStaffPreload('sofia@angustia.com', 'demo123')}
               className={`py-2 px-1 rounded-lg border text-[9px] font-bold transition-all active:scale-95 ${darkMode
-                  ? 'border-slate-600 text-slate-300 hover:border-indigo-500 hover:text-indigo-400 hover:bg-slate-700'
-                  : 'border-slate-100 text-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50'
+                ? 'border-slate-600 text-slate-300 hover:border-indigo-500 hover:text-indigo-400 hover:bg-slate-700'
+                : 'border-slate-100 text-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50'
                 }`}
               type="button">
               Sofía<br />S3
@@ -224,8 +224,8 @@ const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin 
             <button
               onClick={() => handleStaffPreload('miguel@angustia.com', 'demo123')}
               className={`py-2 px-1 rounded-lg border text-[9px] font-bold transition-all active:scale-95 ${darkMode
-                  ? 'border-slate-600 text-slate-300 hover:border-indigo-500 hover:text-indigo-400 hover:bg-slate-700'
-                  : 'border-slate-100 text-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50'
+                ? 'border-slate-600 text-slate-300 hover:border-indigo-500 hover:text-indigo-400 hover:bg-slate-700'
+                : 'border-slate-100 text-slate-600 hover:border-indigo-500 hover:text-indigo-600 hover:bg-indigo-50'
                 }`}
               type="button">
               Miguel<br />S4
@@ -236,8 +236,8 @@ const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin 
             <button
               onClick={() => handleStaffPreload('coordinacion@test.cl', 'se1234')}
               className={`py-3 px-2 rounded-xl text-[10px] font-bold transition-all uppercase tracking-wide active:scale-95 ${darkMode
-                  ? 'bg-slate-700 text-slate-300 hover:bg-slate-600'
-                  : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
+                ? 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
                 }`}
               type="button">
               Coordinador
@@ -245,8 +245,8 @@ const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin 
             <button
               onClick={() => handleStaffPreload('profesional@test.cl', 'cr1234')}
               className={`py-3 px-2 rounded-xl text-[10px] font-bold transition-all uppercase tracking-wide active:scale-95 ${darkMode
-                  ? 'bg-slate-700 text-slate-300 hover:bg-slate-600'
-                  : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
+                ? 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
                 }`}
               type="button">
               Profesional
@@ -268,16 +268,16 @@ const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin 
             <button
               onClick={toggleDarkMode}
               className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all p-0 ${darkMode
-                  ? 'border-slate-600 text-brand-500 hover:text-brand-400 hover:border-brand-400'
-                  : 'border-slate-100 text-slate-300 hover:text-brand-500 hover:border-brand-200'
+                ? 'border-slate-600 text-brand-500 hover:text-brand-400 hover:border-brand-400'
+                : 'border-slate-100 text-slate-300 hover:text-brand-500 hover:border-brand-200'
                 }`}>
               {darkMode ? <Sun size={14} /> : <Moon size={14} />}
             </button>
             <button
               onClick={openFAQ}
               className={`w-8 h-8 rounded-full border flex items-center justify-center transition-all p-0 ${darkMode
-                  ? 'border-slate-600 text-slate-400 hover:text-brand-500 hover:border-brand-400'
-                  : 'border-slate-100 text-slate-300 hover:text-brand-500 hover:border-brand-200'
+                ? 'border-slate-600 text-slate-400 hover:text-brand-500 hover:border-brand-400'
+                : 'border-slate-100 text-slate-300 hover:text-brand-500 hover:border-brand-200'
                 }`}>
               <HelpCircle size={14} />
             </button>
@@ -316,7 +316,7 @@ export default function App() {
       avatar: 'https://picsum.photos/200/200?random=1',
       status: 'ACTIVE',
       phase: userSession.matricula?.dimension || 'ANGUSTIA',
-      currentWeek: Math.min(Math.max(1, userSession.semanasDisponibles || 1), 4),
+      currentWeek: Math.min(Math.max(1, userSession.semanasDisponibles || 1), 4) as 1 | 2 | 3 | 4,
       startDate: userSession.matricula?.fechaInicio || new Date().toISOString(),
       nextSession: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
       program: userSession.matricula?.dimension || 'ANGUSTIA',
