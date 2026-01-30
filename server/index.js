@@ -13,7 +13,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3005;
-const CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:3001';
+const CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:3000';
 
 console.log('🌐 CORS configurado para:', CORS_ORIGIN);
 
