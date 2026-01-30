@@ -50,6 +50,13 @@ const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin 
     }
   };
 
+  // Nueva función para pre-cargar datos de staff
+  const handleStaffPreload = (staffEmail: string, staffPassword: string) => {
+    setEmail(staffEmail);
+    setPassword(staffPassword);
+    setError('');
+  };
+
   return (
     <div className="min-h-screen min-h-[100dvh] flex items-center justify-center bg-white font-sans relative overflow-hidden">
 
@@ -148,13 +155,22 @@ const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin 
           </div>
 
           <div className="grid grid-cols-3 gap-2">
-            <button onClick={() => handleDemoLogin('coordinacion@test.cl')} className="py-3 px-2 rounded-xl bg-slate-50 text-[10px] font-bold text-slate-600 hover:bg-slate-100 transition-all uppercase tracking-wide active:scale-95">
+            <button
+              onClick={() => handleStaffPreload('coordinacion@test.cl', 'se1234')}
+              className="py-3 px-2 rounded-xl bg-slate-50 text-[10px] font-bold text-slate-600 hover:bg-slate-100 transition-all uppercase tracking-wide active:scale-95"
+              type="button">
               Coordinador
             </button>
-            <button onClick={() => handleDemoLogin('profesional@test.cl')} className="py-3 px-2 rounded-xl bg-slate-50 text-[10px] font-bold text-slate-600 hover:bg-slate-100 transition-all uppercase tracking-wide active:scale-95">
+            <button
+              onClick={() => handleStaffPreload('profesional@test.cl', 'cr1234')}
+              className="py-3 px-2 rounded-xl bg-slate-50 text-[10px] font-bold text-slate-600 hover:bg-slate-100 transition-all uppercase tracking-wide active:scale-95"
+              type="button">
               Profesional
             </button>
-            <button onClick={() => handleDemoLogin('admin@test.cl')} className="py-3 px-2 rounded-xl bg-slate-900 text-white text-[10px] font-bold hover:bg-slate-800 transition-all uppercase tracking-wide active:scale-95">
+            <button
+              onClick={() => handleStaffPreload('admin@test.cl', 'bo1234')}
+              className="py-3 px-2 rounded-xl bg-slate-900 text-white text-[10px] font-bold hover:bg-slate-800 transition-all uppercase tracking-wide active:scale-95"
+              type="button">
               Admin
             </button>
           </div>
