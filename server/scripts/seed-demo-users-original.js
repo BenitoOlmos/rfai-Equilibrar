@@ -143,27 +143,27 @@ async function seedOriginalDemoUsers() {
 
         await connection.query(`
       INSERT INTO usuarios (id, nombre_completo, email, estado) 
-      VALUES ('u-admin', 'Claudio Reyes', 'admin@equilibrar.cl', 'ACTIVO')
-      ON DUPLICATE KEY UPDATE nombre_completo = VALUES(nombre_completo)
+      VALUES ('u-admin', 'Benito Olmos', 'admin@test.cl', 'ACTIVO')
+      ON DUPLICATE KEY UPDATE nombre_completo = 'Benito Olmos', email = 'admin@test.cl'
     `);
         await connection.query(`INSERT IGNORE INTO usuario_roles (usuario_id, rol_id) VALUES ('u-admin', 1)`);
-        console.log('   ✅ Claudio Reyes (Admin)');
+        console.log('   ✅ Benito Olmos (Admin)');
 
         await connection.query(`
       INSERT INTO usuarios (id, nombre_completo, email, estado) 
-      VALUES ('u-coord', 'María Coordinadora', 'coord@equilibrar.cl', 'ACTIVO')
-      ON DUPLICATE KEY UPDATE nombre_completo = VALUES(nombre_completo)
+      VALUES ('u-coord', 'Sol Elgueta', 'coordinacion@test.cl', 'ACTIVO')
+      ON DUPLICATE KEY UPDATE nombre_completo = 'Sol Elgueta', email = 'coordinacion@test.cl'
     `);
         await connection.query(`INSERT IGNORE INTO usuario_roles (usuario_id, rol_id) VALUES ('u-coord', 2)`);
-        console.log('   ✅ María Coordinadora (Coordinador)');
+        console.log('   ✅ Sol Elgueta (Coordinador)');
 
         await connection.query(`
       INSERT INTO usuarios (id, nombre_completo, email, estado) 
-      VALUES ('u-prof', 'Dr. Especialista', 'prof@equilibrar.cl', 'ACTIVO')
-      ON DUPLICATE KEY UPDATE nombre_completo = VALUES(nombre_completo)
+      VALUES ('u-prof', 'Claudio Reyes', 'profesional@test.cl', 'ACTIVO')
+      ON DUPLICATE KEY UPDATE nombre_completo = 'Claudio Reyes', email = 'profesional@test.cl'
     `);
         await connection.query(`INSERT IGNORE INTO usuario_roles (usuario_id, rol_id) VALUES ('u-prof', 3)`);
-        console.log('   ✅ Dr. Especialista (Profesional)');
+        console.log('   ✅ Claudio Reyes (Profesional)');
 
         console.log('\n🎉 ¡USUARIOS DEMO ORIGINALES INSERTADOS!\n');
 

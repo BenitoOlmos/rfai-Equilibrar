@@ -148,13 +148,13 @@ const LoginPage: React.FC<{ onLogin: (sessionData: any) => void }> = ({ onLogin 
           </div>
 
           <div className="grid grid-cols-3 gap-2">
-            <button onClick={() => handleDemoLogin('coord@equilibrar.cl')} className="py-3 px-2 rounded-xl bg-slate-50 text-[10px] font-bold text-slate-600 hover:bg-slate-100 transition-all uppercase tracking-wide active:scale-95">
+            <button onClick={() => handleDemoLogin('coordinacion@test.cl')} className="py-3 px-2 rounded-xl bg-slate-50 text-[10px] font-bold text-slate-600 hover:bg-slate-100 transition-all uppercase tracking-wide active:scale-95">
               Coordinador
             </button>
-            <button onClick={() => handleDemoLogin('prof@equilibrar.cl')} className="py-3 px-2 rounded-xl bg-slate-50 text-[10px] font-bold text-slate-600 hover:bg-slate-100 transition-all uppercase tracking-wide active:scale-95">
+            <button onClick={() => handleDemoLogin('profesional@test.cl')} className="py-3 px-2 rounded-xl bg-slate-50 text-[10px] font-bold text-slate-600 hover:bg-slate-100 transition-all uppercase tracking-wide active:scale-95">
               Profesional
             </button>
-            <button onClick={() => handleDemoLogin('admin@equilibrar.cl')} className="py-3 px-2 rounded-xl bg-slate-900 text-white text-[10px] font-bold hover:bg-slate-800 transition-all uppercase tracking-wide active:scale-95">
+            <button onClick={() => handleDemoLogin('admin@test.cl')} className="py-3 px-2 rounded-xl bg-slate-900 text-white text-[10px] font-bold hover:bg-slate-800 transition-all uppercase tracking-wide active:scale-95">
               Admin
             </button>
           </div>
