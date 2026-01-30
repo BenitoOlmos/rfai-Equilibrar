@@ -7,6 +7,7 @@ import { pool } from './config/db.js';
 import guiasRoutes from './routes/guiasRoutes.js';
 import analyticsRoutes from './routes/analyticsRoutes.js';
 import recursosRoutes from './routes/recursosRoutes.js';
+import devRoutes from './routes/devRoutes.js';
 
 dotenv.config();
 
@@ -15,7 +16,7 @@ const PORT = process.env.PORT || 3005;
 
 // Middleware
 app.use(cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
     credentials: true
 }));
 app.use(express.json());
@@ -35,11 +36,18 @@ app.use((req, res, next) => {
 app.get('/api/health', async (req, res) => {
     try {
         const [rows] = await pool.query('SELECT 1 as val');
+        const [userCount] = await pool.query('SELECT COUNT(*) as total FROM usuarios');
+        const [programCount] = await pool.query('SELECT COUNT(*) as total FROM programas');
+
         res.json({
             status: 'OK',
             db_check: rows[0].val,
             timestamp: new Date().toISOString(),
-            environment: process.env.NODE_ENV || 'development'
+            environment: process.env.NODE_ENV || 'development',
+            stats: {
+                usuarios: userCount[0].total,
+                programas: programCount[0].total
+            }
         });
     } catch (error) {
         res.status(500).json({
@@ -49,6 +57,12 @@ app.get('/api/health', async (req, res) => {
         });
     }
 });
+
+// Dev routes (solo para desarrollo - REMOVER en producción)
+if (process.env.NODE_ENV === 'development') {
+    app.use('/api/dev', devRoutes);
+    console.log('⚠️  DEV ROUTES ACTIVADAS - No usar en producción');
+}
 
 // Auth routes (básico - expandir según necesidad)
 app.post('/api/auth/login', async (req, res) => {
